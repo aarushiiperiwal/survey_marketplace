@@ -1,0 +1,350 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:#FAFAF8}
+#app{min-height:600px;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;background:#FAFAF8}
+.card{background:#fff;border-radius:16px;border:0.5px solid #D3D1C7;padding:32px 28px;width:100%;max-width:500px}
+.logo{font-size:13px;font-weight:500;color:#1D9E75;letter-spacing:0.04em;margin-bottom:24px;text-align:center}
+h1{font-size:22px;font-weight:500;color:#26215C;margin-bottom:8px;text-align:center}
+.sub{font-size:14px;color:#888780;text-align:center;line-height:1.6;margin-bottom:28px}
+.seg-btn{display:block;width:100%;padding:16px 20px;border:0.5px solid #D3D1C7;border-radius:12px;background:#fff;text-align:left;cursor:pointer;margin-bottom:12px;transition:border-color 0.15s,background 0.15s}
+.seg-btn:hover{border-color:#26215C;background:#EEEDFE}
+.seg-btn .label{font-size:15px;font-weight:500;color:#26215C}
+.seg-btn .hint{font-size:12px;color:#888780;margin-top:3px}
+.progress{display:flex;gap:6px;justify-content:center;margin-bottom:24px}
+.dot{width:8px;height:8px;border-radius:50%;background:#D3D1C7;transition:background 0.2s}
+.dot.active{background:#1D9E75}
+.dot.done{background:#26215C}
+.q-label{font-size:13px;font-weight:500;color:#1D9E75;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
+.q-text{font-size:17px;font-weight:500;color:#26215C;margin-bottom:20px;line-height:1.5}
+.pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+.pair-card{padding:18px 14px;border:1.5px solid #D3D1C7;border-radius:12px;background:#fff;cursor:pointer;font-size:14px;color:#26215C;line-height:1.5;text-align:center;transition:all 0.15s}
+.pair-card:hover{border-color:#26215C;background:#EEEDFE}
+.pair-card.selected{border-color:#1D9E75;background:#E1F5EE;color:#085041}
+.vs-label{text-align:center;font-size:12px;color:#B4B2A9;margin-bottom:12px}
+.opt-btn{display:block;width:100%;padding:13px 16px;border:0.5px solid #D3D1C7;border-radius:10px;background:#fff;text-align:left;cursor:pointer;font-size:14px;color:#26215C;margin-bottom:8px;transition:all 0.15s}
+.opt-btn:hover{border-color:#26215C;background:#EEEDFE}
+.opt-btn.selected{border-color:#1D9E75;background:#E1F5EE;color:#085041;font-weight:500}
+.drag-list{margin-bottom:16px}
+.drag-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border:0.5px solid #D3D1C7;border-radius:10px;background:#fff;margin-bottom:8px;cursor:grab;user-select:none;font-size:14px;color:#26215C;transition:box-shadow 0.15s}
+.drag-item.dragging{opacity:0.5}
+.drag-item.over{border-color:#1D9E75;background:#E1F5EE}
+.rank-num{width:22px;height:22px;border-radius:50%;background:#26215C;color:#fff;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.drag-handle{color:#B4B2A9;font-size:18px;flex-shrink:0}
+.btn-primary{display:block;width:100%;padding:14px;background:#26215C;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;margin-top:8px;transition:background 0.15s}
+.btn-primary:hover{background:#3C3489}
+.btn-primary:disabled{background:#B4B2A9;cursor:not-allowed}
+.btn-secondary{display:block;width:100%;padding:12px;background:transparent;color:#888780;border:none;font-size:13px;cursor:pointer;margin-top:8px}
+.btn-secondary:hover{color:#26215C}
+.scene-nav{display:flex;gap:8px;margin-bottom:16px}
+.scene-dot{flex:1;height:3px;border-radius:2px;background:#D3D1C7;transition:background 0.2s}
+.scene-dot.done{background:#26215C}
+.scene-dot.active{background:#1D9E75}
+.input-field{width:100%;padding:12px 14px;border:0.5px solid #D3D1C7;border-radius:10px;font-size:14px;color:#26215C;background:#fff;margin-bottom:12px;outline:none}
+.input-field:focus{border-color:#26215C}
+.ty-icon{width:56px;height:56px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
+.sending{color:#888780;font-size:13px;text-align:center;margin-top:12px}
+</style>
+
+<div id="app">
+  <div class="card" id="main-card">
+    <div class="logo">DISCOVERY MARKETPLACE</div>
+    <div id="screen"></div>
+  </div>
+</div>
+
+<script>
+const WEBHOOK = "https://script.google.com/macros/s/AKfycbw9oFn6OtZlfMRxRQL2Oev1SaUNjHTegoVkXajNhhUHOYFBaGjPllvroEob8DO88Bt7/exec";
+
+const state = {
+  segment: null,
+  startTime: Date.now(),
+  trade_offs: {},
+  trust_ladder: [],
+  origin_story: {},
+  discovery_frequency: '',
+  last_discovery_channel: '',
+  algorithm_feeling: '',
+  platform_intent: '',
+  waitlist_email: '',
+  early_access_email: '',
+  cac_monthly: '',
+  marketplace_fee_pct: '',
+  commission_12pct: '',
+  growth_bottleneck: '',
+  cac_budget: '',
+  trust_requirement: ''
+};
+
+const PAIRS = [
+  ["A brand 10,000 people love", "A brand you've never heard but with stunning products", "popular", "unknown"],
+  ["Scrolling Instagram until something catches your eye", "A curated feed of brands chosen just for you", "scrolling", "curated"],
+  ["Finding the perfect thing takes time — that's part of the fun", "Finding the perfect thing should be instant", "takes_time", "instant"],
+  ["I trust brands my friends recommend", "I trust brands an expert curator recommends", "friends", "curator"],
+  ["I want to discover brands before everyone else knows them", "I only buy brands that already have social proof", "early_adopter", "social_proof"],
+  ["Shopping is about the product", "Shopping is about the story behind the brand", "product", "story"],
+  ["I'm happy with how I discover new brands today", "Discovery feels broken — I'm missing great brands", "happy", "broken"],
+  ["I'd pay more for a product from a homegrown brand", "Price matters more than where the brand is from", "homegrown_premium", "price_first"]
+];
+
+const TRUST_RUNGS = [
+  "A friend or family member used it and liked it",
+  "100+ verified reviews with photos",
+  "Featured in a magazine or credible publication",
+  "The founder's story resonates with me",
+  "A trusted influencer or curator recommended it",
+  "Clean product photos and professional website"
+];
+
+const DISC_HABITS = [
+  { q: "How often do you actively look for new brands?", key: "discovery_frequency", opts: ["Daily","Weekly","Monthly","Only when I need something specific","Rarely"] },
+  { q: "When you last discovered a brand you loved, where did you find it?", key: "last_discovery_channel", opts: ["Instagram/social media","Friend recommended it","Physical store or market","Existing marketplace (Amazon, Myntra, etc)","Google search","Blog or magazine","Can't remember"] },
+  { q: "How do you feel about the brands Instagram shows you?", key: "algorithm_feeling", opts: ["Same things over and over","Mostly relevant to me","Too random","I don't use Instagram for discovery"] },
+  { q: "If there was a place that only showed you new, emerging brands — would you check it?", key: "platform_intent", opts: ["Yes, I'd visit regularly","Maybe occasionally","Probably not","Definitely not"] }
+];
+
+const SCENES = [
+  { q: "Where did customer #1 come from?", key: "first_customer", opts: ["Friend or family","Instagram post","Word of mouth","Local market or event","Online marketplace","Other"] },
+  { q: "How did most of your first 10 customers find you?", key: "first_10", opts: ["Instagram organically","Paid Instagram ads","WhatsApp forwards","Physical presence (market/store)","Existing marketplace listing","Other"] },
+  { q: "Where do MOST of your customers come from now?", key: "current_main", opts: ["Instagram (organic)","Instagram (paid ads)","Marketplaces (Amazon, Flipkart, Myntra, etc)","Your own website","Repeat customers","Word of mouth","Other"] },
+  { q: "If you could wave a wand — where would you WANT customers to come from?", key: "wishlist", opts: ["A dedicated discovery platform for emerging brands","More organic Instagram reach","Stronger word of mouth","My own brand website","Physical retail presence","Other"] },
+  { q: "What's stopping you from getting customers the way you want?", key: "bottleneck", opts: ["Can't afford ads","Algorithm doesn't show my posts","Hard to build trust with new customers","No presence on right platforms","Other"] }
+];
+
+const BRAND_Q = [
+  { q: "How much do you spend monthly trying to acquire new customers?", key: "cac_monthly", opts: ["Under ₹5,000","₹5,000–₹20,000","₹20,000–₹50,000","Over ₹50,000","Nothing — all organic"] },
+  { q: "What % of your revenue goes to marketplace fees?", key: "marketplace_fee_pct", opts: ["0% — I don't use marketplaces","Under 10%","10–20%","20–30%","Over 30%"] },
+  { q: "If a new platform charged 12% commission but brought you new customers — would you join?", key: "commission_12pct", opts: ["Yes, immediately","Maybe — need to see results first","Probably not","Definitely not"] },
+  { q: "What would make you trust a new platform enough to list your brand?", key: "trust_requirement", opts: ["Seeing other brands succeed on it","A free trial period","Direct introduction from someone I trust","Guaranteed minimum orders","Nothing — I'm skeptical of new platforms"] }
+];
+
+let buyerPairIdx = 0;
+let habitIdx = 0;
+let sceneIdx = 0;
+let brandQIdx = 0;
+let dragList = [...TRUST_RUNGS];
+let dragSrc = null;
+
+function render(html) {
+  document.getElementById('screen').innerHTML = html;
+}
+
+function dots(total, current) {
+  return `<div class="progress">${Array.from({length:total},(_,i)=>`<div class="dot ${i<current?'done':i===current?'active':''}"></div>`).join('')}</div>`;
+}
+
+function showEntry() {
+  render(`
+    <h1>Help us understand discovery</h1>
+    <p class="sub">We're building something new for how people find brands.<br>This takes 2 minutes. Your honest answers shape what we build.</p>
+    <button class="seg-btn" onclick="chooseSegment('buyer')">
+      <div class="label">I'm here to shop</div>
+      <div class="hint">If you've ever struggled to find new brands</div>
+    </button>
+    <button class="seg-btn" onclick="chooseSegment('brand')">
+      <div class="label">I run a brand</div>
+      <div class="hint">If getting discovered feels impossible</div>
+    </button>
+  `);
+}
+
+function chooseSegment(seg) {
+  state.segment = seg;
+  state.startTime = Date.now();
+  if (seg === 'buyer') { buyerPairIdx = 0; showBuyerPair(); }
+  else { sceneIdx = 0; showScene(); }
+}
+
+function showBuyerPair() {
+  if (buyerPairIdx >= 8) { habitIdx = 0; showHabit(); return; }
+  const [a, b] = PAIRS[buyerPairIdx];
+  render(`
+    ${dots(8, buyerPairIdx)}
+    <div class="q-label">Which resonates more with you?</div>
+    <div class="pair-grid">
+      <div class="pair-card" id="pa" onclick="pickPair(0)">${a}</div>
+      <div class="pair-card" id="pb" onclick="pickPair(1)">${b}</div>
+    </div>
+    <div class="vs-label">choose one</div>
+  `);
+}
+
+function pickPair(idx) {
+  const key = `pair_${buyerPairIdx+1}`;
+  state.trade_offs[key] = PAIRS[buyerPairIdx][idx === 0 ? 2 : 3];
+  document.getElementById(idx===0?'pa':'pb').classList.add('selected');
+  setTimeout(() => { buyerPairIdx++; showBuyerPair(); }, 300);
+}
+
+function showHabit() {
+  if (habitIdx >= 4) { showTrustLadder(); return; }
+  const h = DISC_HABITS[habitIdx];
+  render(`
+    ${dots(4, habitIdx)}
+    <div class="q-label">Quick question ${habitIdx+1} of 4</div>
+    <div class="q-text">${h.q}</div>
+    ${h.opts.map(o=>`<button class="opt-btn" onclick="pickHabit('${h.key}','${o.replace(/'/g,"\\'")}',this)">${o}</button>`).join('')}
+  `);
+}
+
+function pickHabit(key, val, el) {
+  state[key] = val;
+  el.classList.add('selected');
+  setTimeout(() => { habitIdx++; showHabit(); }, 250);
+}
+
+function showTrustLadder() {
+  dragList = [...TRUST_RUNGS];
+  renderLadder();
+}
+
+function renderLadder() {
+  render(`
+    <div class="q-label">Rank these</div>
+    <div class="q-text" style="font-size:15px">Before you buy from a brand you've never heard of — what do you need to see first?<br><span style="font-size:13px;color:#888780;font-weight:400">Drag to reorder. Most important at the top.</span></div>
+    <div class="drag-list" id="dragList">
+      ${dragList.map((item,i)=>`
+        <div class="drag-item" draggable="true" data-idx="${i}"
+          ondragstart="dragStart(event,${i})"
+          ondragover="dragOver(event,${i})"
+          ondrop="dropItem(event,${i})"
+          ondragend="dragEnd()">
+          <span class="drag-handle">⠿</span>
+          <span class="rank-num">${i+1}</span>
+          <span style="flex:1;font-size:13px">${item}</span>
+        </div>`).join('')}
+    </div>
+    <button class="btn-primary" onclick="submitLadder()">Looks good →</button>
+  `);
+}
+
+function dragStart(e, idx) { dragSrc = idx; e.dataTransfer.effectAllowed='move'; setTimeout(()=>document.querySelectorAll('.drag-item')[idx].classList.add('dragging'),0); }
+function dragOver(e, idx) { e.preventDefault(); document.querySelectorAll('.drag-item').forEach((el,i)=>el.classList.toggle('over',i===idx&&i!==dragSrc)); }
+function dropItem(e, idx) {
+  e.preventDefault();
+  if (dragSrc === null || dragSrc === idx) return;
+  const moved = dragList.splice(dragSrc, 1)[0];
+  dragList.splice(idx, 0, moved);
+  renderLadder();
+}
+function dragEnd() { dragSrc = null; document.querySelectorAll('.drag-item').forEach(el=>el.classList.remove('dragging','over')); }
+function submitLadder() { state.trust_ladder = [...dragList]; showBuyerThankYou(); }
+
+function showBuyerThankYou() {
+  render(`
+    <div class="ty-icon">✓</div>
+    <h1 style="margin-bottom:8px">You're done. Thank you.</h1>
+    <p class="sub" style="margin-bottom:24px">We're building a discovery platform for people like you. Want early access when we launch?</p>
+    <input class="input-field" id="emailInput" type="email" placeholder="your@email.com" />
+    <button class="btn-primary" onclick="submitBuyer()">Yes, let me know</button>
+    <button class="btn-secondary" onclick="submitBuyer(true)">No thanks</button>
+    <p style="font-size:12px;color:#B4B2A9;text-align:center;margin-top:12px">No spam. Just one email when we're live.</p>
+  `);
+}
+
+function submitBuyer(skip) {
+  const email = skip ? '' : (document.getElementById('emailInput').value || '');
+  state.waitlist_email = email;
+  sendData(() => showFinal("buyer"));
+}
+
+function showScene() {
+  if (sceneIdx >= 5) { buyerPairIdx = 0; showBrandPair(); return; }
+  const s = SCENES[sceneIdx];
+  render(`
+    <div class="scene-nav">${Array.from({length:5},(_,i)=>`<div class="scene-dot ${i<sceneIdx?'done':i===sceneIdx?'active':''}"></div>`).join('')}</div>
+    <div class="q-label">Your customer journey · Scene ${sceneIdx+1} of 5</div>
+    <div class="q-text">${s.q}</div>
+    ${s.opts.map(o=>`<button class="opt-btn" onclick="pickScene('${s.key}','${o.replace(/'/g,"\\'")}',this)">${o}</button>`).join('')}
+  `);
+}
+
+function pickScene(key, val, el) {
+  state.origin_story[key] = val;
+  el.classList.add('selected');
+  setTimeout(() => { sceneIdx++; showScene(); }, 250);
+}
+
+function showBrandPair() {
+  if (buyerPairIdx >= 8) { brandQIdx = 0; showBrandQ(); return; }
+  const [a, b] = PAIRS[buyerPairIdx];
+  render(`
+    ${dots(8, buyerPairIdx)}
+    <div class="q-label">As a brand founder — which resonates more?</div>
+    <div class="pair-grid">
+      <div class="pair-card" id="pa" onclick="pickBrandPair(0)">${a}</div>
+      <div class="pair-card" id="pb" onclick="pickBrandPair(1)">${b}</div>
+    </div>
+    <div class="vs-label">choose one</div>
+  `);
+}
+
+function pickBrandPair(idx) {
+  const key = `pair_${buyerPairIdx+1}`;
+  state.trade_offs[key] = PAIRS[buyerPairIdx][idx === 0 ? 2 : 3];
+  document.getElementById(idx===0?'pa':'pb').classList.add('selected');
+  setTimeout(() => { buyerPairIdx++; showBrandPair(); }, 300);
+}
+
+function showBrandQ() {
+  if (brandQIdx >= 4) { showBrandThankYou(); return; }
+  const q = BRAND_Q[brandQIdx];
+  render(`
+    ${dots(4, brandQIdx)}
+    <div class="q-label">Quick question ${brandQIdx+1} of 4</div>
+    <div class="q-text">${q.q}</div>
+    ${q.opts.map(o=>`<button class="opt-btn" onclick="pickBrandQ('${q.key}','${o.replace(/'/g,"\\'")}',this)">${o}</button>`).join('')}
+  `);
+}
+
+function pickBrandQ(key, val, el) {
+  state[key] = val;
+  el.classList.add('selected');
+  setTimeout(() => { brandQIdx++; showBrandQ(); }, 250);
+}
+
+function showBrandThankYou() {
+  render(`
+    <div class="ty-icon">✓</div>
+    <h1 style="margin-bottom:8px">That's a wrap!</h1>
+    <p class="sub" style="margin-bottom:24px">We're building a discovery platform for emerging brands. Want early access and a say in how it works?</p>
+    <input class="input-field" id="emailInput" type="email" placeholder="your@email.com" />
+    <button class="btn-primary" onclick="submitBrand()">Yes, get me early access</button>
+    <button class="btn-secondary" onclick="submitBrand(true)">No thanks</button>
+    <p style="font-size:12px;color:#B4B2A9;text-align:center;margin-top:12px">No spam. One email when we're live.</p>
+  `);
+}
+
+function submitBrand(skip) {
+  const email = skip ? '' : (document.getElementById('emailInput').value || '');
+  state.early_access_email = email;
+  sendData(() => showFinal("brand"));
+}
+
+function sendData(cb) {
+  const payload = {
+    ...state,
+    device: window.innerWidth < 600 ? 'mobile' : 'desktop',
+    completion_time_seconds: Math.round((Date.now() - state.startTime) / 1000),
+    id: 'r_' + Math.random().toString(36).slice(2,10),
+    timestamp: new Date().toISOString()
+  };
+  render(`<p class="sending" style="margin-top:40px;text-align:center;font-size:15px;color:#26215C">Submitting your response…</p>`);
+  fetch(WEBHOOK, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).then(cb).catch(cb);
+}
+
+function showFinal(seg) {
+  render(`
+    <div class="ty-icon">🌱</div>
+    <h1 style="margin-bottom:8px">${seg==='buyer'?'Thank you for shaping this.':'You\'re on the list.'}</h1>
+    <p class="sub">${seg==='buyer'?'Your answers help us build something genuinely useful for people who want more from discovery.':'We\'ll be in touch before we open to the public. Your input will shape how this works.'}</p>
+  `);
+}
+
+showEntry();
+</script>

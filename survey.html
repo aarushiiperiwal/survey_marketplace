@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Discovery Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F9F4EC;
+  --peach:#F2E0C8;
+  --peach-mid:#E8C9A0;
+  --orange:#C97B2E;
+  --orange-lt:#F0A84A;
+  --indigo:#26215C;
+  --teal:#1D9E75;
+  --teal-lt:#E1F5EE;
+  --text:#2C1A06;
+  --text-md:#7A6A55;
+  --text-sm:#9A8A75;
+  --card:#FFFDF8;
+  --border:#EAD9C0;
+  --white:#fff;
+  --muted:#888780;
+  --border2:#D3D1C7;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--cream);
+  min-height:100vh;
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:0;position:relative;overflow-x:hidden;
+}
+body::before{content:'';position:fixed;top:-140px;left:-140px;width:440px;height:440px;background:radial-gradient(circle,#F2DFC0 0%,transparent 70%);z-index:0;pointer-events:none;}
+body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;height:380px;background:radial-gradient(circle,#F0E2C4 0%,transparent 70%);z-index:0;pointer-events:none;}
+
+/* ───── LANDING ───── */
+#landing{position:relative;z-index:1;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 20px 60px;}
+
+.lp-deco-row{position:relative;width:100%;max-width:560px;display:flex;align-items:center;justify-content:center;}
+.lp-icon-left{font-size:48px;position:absolute;left:0;top:0;opacity:.85;animation:fadeUp .5s ease .2s both;}
+.lp-icon-right{font-size:42px;position:absolute;right:0;top:0;opacity:.85;animation:fadeUp .5s ease .25s both;}
+.lp-sparkle{position:absolute;color:var(--orange-lt);opacity:.5;pointer-events:none;font-size:16px;}
+.lp-h1{font-family:'Playfair Display',serif;font-size:clamp(28px,6vw,50px);font-weight:700;color:var(--text);text-align:center;line-height:1.15;padding:0 70px;animation:fadeUp .5s ease .3s both;}
+.lp-sub{font-size:15px;color:var(--text-md);text-align:center;line-height:1.75;max-width:420px;margin:16px auto 36px;animation:fadeUp .5s ease .4s both;}
+.lp-cards{display:flex;flex-direction:column;gap:16px;width:100%;max-width:560px;animation:fadeUp .5s ease .45s both;}
+.lp-card{background:var(--card);border:1px solid var(--border);border-radius:22px;display:flex;align-items:stretch;overflow:hidden;cursor:pointer;box-shadow:0 2px 14px rgba(180,130,60,.07);transition:transform .2s,box-shadow .2s,border-color .2s;}
+.lp-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(180,130,60,.15);border-color:var(--peach-mid);}
+.lp-icon-wrap{display:flex;align-items:center;padding:28px 18px 28px 24px;flex-shrink:0;}
+.lp-icon-bubble{width:52px;height:52px;border-radius:50%;background:var(--peach);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.lp-card-body{padding:28px 16px 28px 0;flex:1;display:flex;flex-direction:column;justify-content:center;}
+.lp-card-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.lp-card-hint{font-size:13px;color:var(--text-md);line-height:1.5;}
+
+
+
+.lp-arrow{display:flex;align-items:center;padding:0 16px 0 4px;flex-shrink:0;align-self:center;}
+.lp-arrow-btn{width:32px;height:32px;border-radius:50%;background:var(--cream);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text-md);transition:background .2s,color .2s,border-color .2s;}
+.lp-card:hover .lp-arrow-btn{background:var(--orange);color:#fff;border-color:var(--orange);}
+
+
+/* ───── SURVEY WRAPPER ───── */
+#survey{display:none;position:relative;z-index:1;width:100%;min-height:100vh;align-items:flex-start;justify-content:center;padding:32px 16px 60px;}
+#survey.active{display:flex;}
+
+/* ───── SURVEY CARD — Option 1 style ───── */
+.s-card{
+  background:var(--white);
+  border-radius:24px;
+  width:100%;max-width:420px;
+  overflow:hidden;
+  box-shadow:0 4px 32px rgba(180,130,60,.13);
+  border:1px solid var(--border);
+  animation:fadeUp .35s ease both;
+}
+
+/* Top header band */
+.s-header{
+  background:var(--cream);
+  padding:22px 24px 18px;
+  position:relative;
+  border-bottom:1px solid var(--border);
+}
+
+
+/* Progress dots — Option 1 style */
+.s-progress{display:flex;gap:7px;justify-content:center;margin-bottom:14px;}
+.s-dot{width:9px;height:9px;border-radius:50%;background:#DDD0BE;transition:background .25s;}
+.s-dot.done{background:var(--orange);}
+.s-dot.active{background:var(--orange);box-shadow:0 0 0 3px rgba(201,123,46,.2);}
+
+.s-sparkle-tl{position:absolute;top:14px;right:22px;font-size:18px;color:var(--orange-lt);opacity:.6;}
+
+/* Counter badge */
+.s-counter{
+  text-align:center;font-size:13px;font-weight:500;
+  color:var(--orange);letter-spacing:.04em;margin-bottom:2px;
+}
+
+/* Main heading */
+.s-qhead{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,5vw,28px);font-weight:700;
+  color:var(--text);text-align:center;line-height:1.25;
+  padding:16px 16px 0;
+}
+
+/* Body */
+.s-body{padding:20px 20px 24px;}
+
+/* ── Option 1 style: vertical illustrated cards ── */
+.o1-option{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:16px;padding:16px 16px;
+  cursor:pointer;margin-bottom:12px;
+  transition:border-color .18s,background .18s,transform .15s,box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.o1-option:hover{border-color:var(--orange);background:#FFF8EF;transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,123,46,.12);}
+.o1-option.selected{border-color:var(--orange);background:#FFF3E0;transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,123,46,.18);}
+.o1-icon{
+  width:54px;height:54px;border-radius:50%;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:24px;background:var(--peach);
+}
+.o1-option.selected .o1-icon{background:#FFE5C0;}
+.o1-text{flex:1;font-size:14px;font-weight:500;color:var(--text);line-height:1.45;}
+
+.o1-vs{text-align:center;font-size:11px;color:#B4A090;letter-spacing:.05em;margin-bottom:0;margin-top:-4px;}
+
+/* Generic opt button (for habits/brand Q — same card style but no illus) */
+.s-opt{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:14px;
+  padding:14px 16px;cursor:pointer;margin-bottom:10px;width:100%;text-align:left;
+  font-size:14px;font-weight:500;color:var(--text);font-family:'DM Sans',sans-serif;
+  transition:border-color .18s,background .18s,transform .15s,box-shadow .15s;
+}
+.s-opt:hover{border-color:var(--orange);background:#FFF8EF;transform:translateY(-1px);box-shadow:0 4px 14px rgba(201,123,46,.1);}
+.s-opt.selected{border-color:var(--orange);background:#FFF3E0;font-weight:500;}
+.s-opt-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:background .15s,border-color .15s;}
+.s-opt.selected .s-opt-dot{background:var(--orange);border-color:var(--orange);}
+
+/* Scene bar */
+.s-scene-bar{display:flex;gap:7px;margin-bottom:14px;}
+.s-scene-seg{flex:1;height:3px;border-radius:2px;background:var(--border);transition:background .2s;}
+.s-scene-seg.done{background:var(--orange);}
+.s-scene-seg.active{background:var(--orange);box-shadow:0 0 0 2px rgba(201,123,46,.2);}
+
+/* Drag (Trust Ladder) */
+.s-drag-list{margin-bottom:16px;}
+.s-drag-item{
+  display:flex;align-items:center;gap:10px;
+  padding:13px 14px;border:1.5px solid var(--border);border-radius:13px;
+  background:var(--card);margin-bottom:8px;cursor:grab;
+  user-select:none;font-size:13px;color:var(--text);
+  transition:box-shadow .15s,border-color .15s;
+}
+.s-drag-item.dragging{opacity:.45;cursor:grabbing;}
+.s-drag-item.over{border-color:var(--orange);background:#FFF8EF;}
+.s-rank-num{width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s-drag-handle{color:#C4B09A;font-size:19px;flex-shrink:0;line-height:1;}
+
+/* Buttons */
+.s-btn{display:block;width:100%;padding:14px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;margin-top:4px;transition:background .15s;font-family:'DM Sans',sans-serif;}
+.s-btn:hover{background:#A8621F;}
+.s-btn-ghost{display:block;width:100%;padding:11px;background:transparent;color:var(--muted);border:none;font-size:13px;cursor:pointer;margin-top:6px;font-family:'DM Sans',sans-serif;}
+.s-btn-ghost:hover{color:var(--text);}
+.s-input{width:100%;padding:13px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:14px;color:var(--text);background:var(--card);margin-bottom:12px;outline:none;font-family:'DM Sans',sans-serif;}
+.s-input:focus{border-color:var(--orange);}
+.s-microcopy{font-size:12px;color:#B4A090;text-align:center;margin-top:10px;}
+
+/* Thank you */
+.s-ty-icon{width:60px;height:60px;border-radius:50%;background:var(--peach);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px;}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ───── MOBILE RESPONSIVE ───── */
+
+/* Make survey card edge-to-edge on small screens */
+@media(max-width:500px){
+  #survey{padding:0;align-items:stretch;}
+  .s-card{
+    border-radius:0;
+    min-height:100vh;
+    max-width:none;
+    border-left:none;border-right:none;
+    box-shadow:none;
+  }
+  .s-header{padding:18px 18px 14px;}
+  .s-body{padding:16px 16px 28px;}
+  .s-qhead{font-size:20px;padding:12px 14px 0;}
+  .o1-option{padding:13px 12px;gap:10px;}
+  .o1-icon{width:44px;height:44px;font-size:20px;}
+  .o1-text{font-size:13px;}
+  .s-opt{padding:12px 13px;font-size:13px;}
+  .s-drag-item{padding:11px 12px;font-size:12px;}
+  .s-btn{padding:13px;font-size:14px;}
+  .s-input{padding:12px 13px;font-size:14px;}
+}
+
+/* Landing page mobile */
+@media(max-width:480px){
+  #landing{padding:36px 16px 48px;}
+  .lp-deco-row{max-width:420px;}
+  .lp-h1{font-size:clamp(24px,7vw,32px);padding:0 44px;}
+  .lp-icon-left{font-size:32px;}
+  .lp-icon-right{font-size:30px;}
+  .lp-sub{font-size:14px;margin:14px auto 28px;}
+  .lp-card{border-radius:16px;}
+  .lp-icon-wrap{padding:20px 14px 20px 18px;}
+  .lp-icon-bubble{width:44px;height:44px;font-size:18px;}
+  .lp-card-body{padding:20px 12px 20px 0;}
+  .lp-card-title{font-size:17px;}
+  .lp-card-hint{font-size:12px;}
+  .lp-arrow{padding:0 14px 0 4px;}
+  .lp-arrow-btn{width:28px;height:28px;font-size:14px;}
+}
+
+/* Extra-small phones (e.g. 320-360px) */
+@media(max-width:380px){
+  body::before,
+  body::after{display:none;}
+  #landing{padding:28px 12px 38px;}
+  .lp-deco-row{max-width:100%;}
+  .lp-h1{padding:0 28px;line-height:1.2;}
+  .lp-icon-left{left:2px;font-size:28px;}
+  .lp-icon-right{right:2px;font-size:26px;}
+  .lp-sub{font-size:13px;line-height:1.6;}
+  .lp-card{border-radius:14px;}
+  .lp-icon-wrap{padding:16px 10px 16px 14px;}
+  .lp-icon-bubble{width:40px;height:40px;font-size:17px;}
+  .lp-card-body{padding:16px 10px 16px 0;}
+  .lp-card-title{font-size:16px;}
+  .lp-card-hint{font-size:11px;line-height:1.4;}
+  .lp-arrow{padding:0 10px 0 2px;}
+  .lp-arrow-btn{width:26px;height:26px;font-size:13px;}
+  .s-header{padding:16px 14px 12px;}
+  .s-body{padding:14px 12px 22px;}
+  .s-qhead{font-size:19px;padding:10px 10px 0;}
+  .o1-option{padding:11px 10px;gap:8px;}
+  .o1-icon{width:38px;height:38px;font-size:18px;}
+  .o1-text{font-size:12px;}
+  .s-opt{padding:11px 10px;font-size:12px;gap:10px;}
+  .s-opt-dot{width:16px;height:16px;}
+  .s-btn{padding:12px;font-size:14px;}
+  .s-btn-ghost{font-size:12px;}
+}
+
+/* Touch: remove hover transforms on mobile */
+@media(hover:none){
+  .o1-option:hover{transform:none;box-shadow:none;}
+  .s-opt:hover{transform:none;box-shadow:none;}
+  .lp-card:hover{transform:none;box-shadow:0 2px 14px rgba(180,130,60,.07);}
+  .lp-card:hover .lp-arrow-btn{background:var(--cream);color:var(--text-md);border-color:var(--border);}
+}
+
+/* Active tap states for touch */
+.o1-option:active{border-color:var(--orange);background:#FFF3E0;transform:scale(0.98);}
+.s-opt:active{border-color:var(--orange);background:#FFF3E0;}
+.lp-card:active{transform:scale(0.99);}
+.s-btn:active{background:#A8621F;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LANDING PAGE ═══════════════ -->
+<div id="landing">
+  <div class="lp-deco-row">
+    <span class="lp-icon-left">🔍</span>
+    <span class="lp-icon-right">🛍️</span>
+    <span class="lp-sparkle" style="left:68px;top:-10px;">✦</span>
+    <span class="lp-sparkle" style="right:62px;bottom:4px;font-size:12px;">✦</span>
+    <span class="lp-sparkle" style="left:42px;bottom:-2px;font-size:10px;">✦</span>
+    <h1 class="lp-h1">Help us understand<br>discovery</h1>
+  </div>
+  <p class="lp-sub">We're building something for how people find brands.<br>This takes 2 minutes. Your honest answers shape what we build.</p>
+  <div class="lp-cards">
+    <div class="lp-card" onclick="startSurvey('buyer')">
+      <div class="lp-icon-wrap"><div class="lp-icon-bubble">🛍️</div></div>
+      <div class="lp-card-body">
+        <div class="lp-card-title">I'm here to shop</div>
+        <div class="lp-card-hint">If you've ever struggled to find new brands</div>
+      </div>
+      <div class="lp-arrow"><div class="lp-arrow-btn">›</div></div>
+    </div>
+    <div class="lp-card" onclick="startSurvey('brand')">
+      <div class="lp-icon-wrap"><div class="lp-icon-bubble">🏷️</div></div>
+      <div class="lp-card-body">
+        <div class="lp-card-title">I run a brand</div>
+        <div class="lp-card-hint">If getting discovered feels impossible</div>
+      </div>
+      <div class="lp-arrow"><div class="lp-arrow-btn">›</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SURVEY ═══════════════ -->
+<div id="survey">
+  <div class="s-card">
+    <div id="sScreen"></div>
+  </div>
+</div>
+
+<script>
+const WEBHOOK="https://script.google.com/macros/s/AKfycbw9oFn6OtZlfMRxRQL2Oev1SaUNjHTegoVkXajNhhUHOYFBaGjPllvroEob8DO88Bt7/exec";
+
+const S={segment:null,startTime:0,trade_offs:{},trust_ladder:[],origin_story:{},discovery_frequency:'',last_discovery_channel:'',algorithm_feeling:'',platform_intent:'',waitlist_email:'',early_access_email:'',respondent_name:'',cac_monthly:'',marketplace_fee_pct:'',commission_12pct:'',trust_requirement:''};
+
+/* Pair emojis: [left icon, right icon, left illus, right illus] */
+const PAIR_META=[
+  ['❤️','✨','👨‍👩‍👧‍👦','🎁'],
+  ['📱','🎯','📲','🗂️'],
+  ['⏳','⚡','🛒','🔍'],
+  ['👥','🧑‍💼','🤝','🏅'],
+  ['🌟','🔒','🚀','✅'],
+  ['📦','📖','🛍️','📚'],
+  ['😊','💔','👍','🔧'],
+  ['🏡','💰','🌿','💵'],
+];
+const PAIRS=[
+  ["A brand 10,000 people love","A brand you've never heard of with stunning products","popular","unknown"],
+  ["Scrolling Instagram until something catches your eye","A curated feed of brands chosen just for you","scrolling","curated"],
+  ["Finding the perfect thing takes time — that's part of the fun","Finding the perfect thing should be instant","takes_time","instant"],
+  ["I trust brands my friends recommend","I trust brands an expert curator recommends","friends","curator"],
+  ["I want to discover brands before everyone else knows them","I only buy brands that already have social proof","early_adopter","social_proof"],
+  ["Shopping is about the product","Shopping is about the story behind the brand","product","story"],
+  ["I'm happy with how I discover new brands today","Discovery feels broken — I'm missing great brands","happy","broken"],
+  ["I'd pay more for a product from a homegrown brand","Price matters more than where the brand is from","homegrown_premium","price_first"]
+];
+const TRUST_RUNGS=["A friend or family member used it and liked it","100+ verified reviews with photos","Featured in a magazine or credible publication","The founder's story resonates with me","A trusted influencer or curator recommended it","Clean product photos and professional website"];
+const DISC_HABITS=[
+  {q:"How often do you actively look for new brands?",key:"discovery_frequency",opts:["Daily","Weekly","Monthly","Only when I need something specific","Rarely"],icons:["📅","🗓️","📆","🛒","😴"]},
+  {q:"When you last discovered a brand you loved, where did you find it?",key:"last_discovery_channel",opts:["Instagram/social media","Friend recommended it","Physical store or market","Existing marketplace (Amazon, Myntra, etc)","Google search","Blog or magazine","Can't remember"],icons:["📸","👥","🏪","🛍️","🔍","📰","🤷"]},
+  {q:"How do you feel about the brands Instagram shows you?",key:"algorithm_feeling",opts:["Same things over and over","Mostly relevant to me","Too random","I don't use Instagram for discovery"],icons:["🔁","✅","🎲","❌"]},
+  {q:"If there was a place that only showed you new, emerging brands — would you check it?",key:"platform_intent",opts:["Yes, I'd visit regularly","Maybe occasionally","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]}
+];
+const SCENES=[
+  {q:"Where did customer #1 come from?",key:"first_customer",opts:["Friend or family","Instagram post","Word of mouth","Local market or event","Online marketplace","Other"],icons:["👨‍👩‍👧","📸","💬","🏪","🛒","➕"]},
+  {q:"How did most of your first 10 customers find you?",key:"first_10",opts:["Instagram organically","Paid Instagram ads","WhatsApp forwards","Physical presence (market/store)","Existing marketplace listing","Other"],icons:["📲","💸","📱","🏬","🛍️","➕"]},
+  {q:"Where do MOST of your customers come from now?",key:"current_main",opts:["Instagram (organic)","Instagram (paid ads)","Marketplaces (Amazon, Flipkart, Myntra, etc)","Your own website","Repeat customers","Word of mouth","Other"],icons:["📲","💸","🛒","🌐","🔄","💬","➕"]},
+  {q:"If you could wave a wand — where would you WANT customers to come from?",key:"wishlist",opts:["A dedicated discovery platform for emerging brands","More organic Instagram reach","Stronger word of mouth","My own brand website","Physical retail presence","Other"],icons:["✨","📸","💬","🌐","🏪","➕"]},
+  {q:"What's stopping you from getting customers the way you want?",key:"bottleneck",opts:["Can't afford ads","Algorithm doesn't show my posts","Hard to build trust with new customers","No presence on right platforms","Other"],icons:["💸","📉","🔒","📡","➕"]}
+];
+const BRAND_Q=[
+  {q:"How much do you spend monthly trying to acquire new customers?",key:"cac_monthly",opts:["Under ₹5,000","₹5,000–₹20,000","₹20,000–₹50,000","Over ₹50,000","Nothing — all organic"],icons:["💵","💰","💳","🏦","🌱"]},
+  {q:"What % of your revenue goes to marketplace fees?",key:"marketplace_fee_pct",opts:["0% — I don't use marketplaces","Under 10%","10–20%","20–30%","Over 30%"],icons:["✅","📊","📈","📉","😰"]},
+  {q:"If a new platform charged 12% commission but brought you new customers — would you join?",key:"commission_12pct",opts:["Yes, immediately","Maybe — need to see results first","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]},
+  {q:"What would make you trust a new platform enough to list your brand?",key:"trust_requirement",opts:["Seeing other brands succeed on it","A free trial period","Direct introduction from someone I trust","Guaranteed minimum orders","Nothing — I'm skeptical of new platforms"],icons:["👀","🆓","🤝","📦","😤"]}
+];
+
+let pairIdx=0,habitIdx=0,sceneIdx=0,brandQIdx=0;
+let dragList=[...TRUST_RUNGS],dragSrc=null;
+
+function render(html){document.getElementById('sScreen').innerHTML=html;}
+function safe(s){return(s||'').replace(/'/g,"\\'");}
+
+/* ── Progress dots ── */
+function dots(total,cur){
+  return`<div class="s-progress">${Array.from({length:total},(_,i)=>`<div class="s-dot ${i<cur?'done':i===cur?'active':''}"></div>`).join('')}</div>`;
+}
+function scenebar(total,cur){
+  return`<div class="s-scene-bar">${Array.from({length:total},(_,i)=>`<div class="s-scene-seg ${i<cur?'done':i===cur?'active':''}"></div>`).join('')}</div>`;
+}
+
+/* ── Survey header band ── */
+function hdr(dotsHtml,counterText,heading,sparkle){
+  return`<div class="s-header">
+    ${dotsHtml}
+    ${sparkle?`<div class="s-sparkle-tl">✦</div>`:''}
+    <div class="s-counter">${counterText}</div>
+  </div>
+  <div style="padding:16px 20px 0;"><div class="s-qhead">${heading}</div></div>`;
+}
+
+/* ── Option 1 pair card ── */
+function pairCard(text,icon,illus,id,onclick){
+  return`<div class="o1-option" id="${id}" onclick="${onclick}">
+    <div class="o1-icon">${icon}</div>
+    <div class="o1-text">${text}</div>
+  </div>`;
+}
+
+/* ── Generic option with dot ── */
+function optBtn(text,icon,key,val){
+  return`<button class="s-opt" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
+    <div class="s-opt-dot"></div>
+    <span style="font-size:18px;flex-shrink:0">${icon}</span>
+    <span>${text}</span>
+  </button>`;
+}
+
+/* ───── START ───── */
+function startSurvey(seg){
+  S.segment=seg;S.startTime=Date.now();
+  document.getElementById('landing').style.display='none';
+  const sv=document.getElementById('survey');
+  sv.style.display='flex';
+  if(seg==='buyer'){pairIdx=0;showBuyerPair();}
+  else{sceneIdx=0;showScene();}
+}
+
+/* ══ BUYER: Pairs ══ */
+function showBuyerPair(){
+  if(pairIdx>=8){habitIdx=0;showHabit();return;}
+  const [a,b]=PAIRS[pairIdx];
+  const [ia,ib,ea,eb]=PAIR_META[pairIdx];
+  render(`
+    ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
+    <div class="s-body">
+      ${pairCard(a,ia,ea,'pa','pickPair(0)')}
+      ${pairCard(b,ib,eb,'pb','pickPair(1)')}
+
+    </div>
+  `);
+}
+function pickPair(idx){
+  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?0:1];
+  document.querySelectorAll('.o1-option').forEach(el=>el.style.pointerEvents='none');
+  document.getElementById(idx===0?'pa':'pb').classList.add('selected');
+  setTimeout(()=>{pairIdx++;showBuyerPair();},320);
+}
+
+/* ══ BUYER: Habits ══ */
+function showHabit(){
+  if(habitIdx>=4){showTrustLadder();return;}
+  const h=DISC_HABITS[habitIdx];
+  render(`
+    ${hdr(dots(4,habitIdx),`${habitIdx+1} OF 4`,h.q,false)}
+    <div class="s-body">
+      ${h.opts.map((o,i)=>optBtn(o,h.icons[i]||'•',h.key,o)).join('')}
+    </div>
+  `);
+}
+function pickOpt(key,val,el){
+  S[key]=val;el.classList.add('selected');
+  setTimeout(()=>{
+    if(key==='discovery_frequency'||key==='last_discovery_channel'||key==='algorithm_feeling'||key==='platform_intent'){habitIdx++;showHabit();}
+    else if(['first_customer','first_10','current_main','wishlist','bottleneck'].includes(key)){sceneIdx++;showScene();}
+    else if(['cac_monthly','marketplace_fee_pct','commission_12pct','trust_requirement'].includes(key)){brandQIdx++;showBrandQ();}
+  },260);
+}
+
+/* ══ TRUST LADDER ══ */
+function showTrustLadder(){dragList=[...TRUST_RUNGS];renderLadder();}
+function renderLadder(){
+  render(`
+    <div class="s-header">
+        <div class="s-sparkle-tl">✦</div>
+      <div class="s-counter">RANK · 6 ITEMS</div>
+    </div>
+    <div style="padding:14px 20px 0">
+      <div class="s-qhead" style="font-size:20px">Before you buy from a brand you've never heard of —<br><span style="font-size:16px;font-weight:400;color:var(--text-md)">what do you need to see first?</span></div>
+      <p style="font-size:12px;color:var(--text-sm);margin:8px 0 14px;text-align:center">Drag to reorder · Most important at the top</p>
+    </div>
+    <div class="s-body" style="padding-top:0">
+      <div class="s-drag-list" id="dl">
+        ${dragList.map((item,i)=>`
+          <div class="s-drag-item" draggable="true" data-i="${i}"
+            ondragstart="ds(event,${i})" ondragover="dov(event,${i})"
+            ondrop="dp(event,${i})" ondragend="de()">
+            <span class="s-drag-handle">⠿</span>
+            <span class="s-rank-num">${i+1}</span>
+            <span style="flex:1;font-size:13px">${item}</span>
+          </div>`).join('')}
+      </div>
+      <button class="s-btn" onclick="submitLadder()">Looks good →</button>
+    </div>
+  `);
+}
+function ds(e,i){dragSrc=i;e.dataTransfer.effectAllowed='move';setTimeout(()=>document.querySelectorAll('.s-drag-item')[i]?.classList.add('dragging'),0);}
+function dov(e,i){e.preventDefault();document.querySelectorAll('.s-drag-item').forEach((el,j)=>el.classList.toggle('over',j===i&&i!==dragSrc));}
+function dp(e,i){e.preventDefault();if(dragSrc===null||dragSrc===i)return;const m=dragList.splice(dragSrc,1)[0];dragList.splice(i,0,m);renderLadder();}
+function de(){dragSrc=null;document.querySelectorAll('.s-drag-item').forEach(el=>el.classList.remove('dragging','over'));}
+function submitLadder(){S.trust_ladder=[...dragList];showBuyerThankYou();}
+
+/* ══ BUYER THANK YOU ══ */
+function showBuyerThankYou(){
+  render(`
+    <div class="s-header" style="border-bottom:none;padding-bottom:8px">
+      </div>
+    <div class="s-body" style="padding-top:8px;text-align:center">
+      <div class="s-ty-icon">✓</div>
+      <div class="s-qhead" style="font-size:22px;margin-bottom:10px">You're done. Thank you.</div>
+      <p style="font-size:14px;color:var(--text-md);line-height:1.6;margin-bottom:22px">We're building a discovery platform for people like you.<br>Want early access when we launch?</p>
+      <input class="s-input" id="nm" type="text" placeholder="Your name (so we can say hi properly)"/>
+      <input class="s-input" id="eml" type="email" placeholder="your@email.com"/>
+      <button class="s-btn" onclick="submitBuyer()">Yes, let me know</button>
+      <button class="s-btn-ghost" onclick="submitBuyer(true)">No thanks</button>
+      <p class="s-microcopy">No spam. Just one email when we're live.</p>
+    </div>
+  `);
+}
+function submitBuyer(skip){
+  const email=skip?'':(document.getElementById('eml')?.value||'');
+  const name=skip?'':(document.getElementById('nm')?.value||'');
+  S.waitlist_email=email;S.respondent_name=name;sendData(()=>showFinal('buyer'));
+}
+
+/* ══ BRAND: Scenes ══ */
+function showScene(){
+  if(sceneIdx>=5){pairIdx=0;showBrandPair();return;}
+  const sc=SCENES[sceneIdx];
+  render(`
+    <div class="s-header">
+        ${scenebar(5,sceneIdx)}
+      <div class="s-counter">SCENE ${sceneIdx+1} OF 5</div>
+    </div>
+    <div style="padding:14px 20px 0"><div class="s-qhead" style="font-size:20px">${sc.q}</div></div>
+    <div class="s-body">
+      ${sc.opts.map((o,i)=>optBtn(o,sc.icons[i]||'•',sc.key,o)).join('')}
+    </div>
+  `);
+}
+
+/* ══ BRAND: Pairs ══ */
+function showBrandPair(){
+  if(pairIdx>=8){brandQIdx=0;showBrandQ();return;}
+  const [a,b]=PAIRS[pairIdx];
+  const [ia,ib,ea,eb]=PAIR_META[pairIdx];
+  render(`
+    ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
+    <div class="s-body">
+      ${pairCard(a,ia,ea,'pa','pickBrandPair(0)')}
+      ${pairCard(b,ib,eb,'pb','pickBrandPair(1)')}
+
+    </div>
+  `);
+}
+function pickBrandPair(idx){
+  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?0:1];
+  document.querySelectorAll('.o1-option').forEach(el=>el.style.pointerEvents='none');
+  document.getElementById(idx===0?'pa':'pb').classList.add('selected');
+  setTimeout(()=>{pairIdx++;showBrandPair();},320);
+}
+
+/* ══ BRAND: Growth Q ══ */
+function showBrandQ(){
+  if(brandQIdx>=4){showBrandThankYou();return;}
+  const q=BRAND_Q[brandQIdx];
+  render(`
+    <div class="s-header">
+        ${dots(4,brandQIdx)}
+      <div class="s-counter">${brandQIdx+1} OF 4</div>
+    </div>
+    <div style="padding:14px 20px 0"><div class="s-qhead" style="font-size:19px">${q.q}</div></div>
+    <div class="s-body">
+      ${q.opts.map((o,i)=>optBtn(o,q.icons[i]||'•',q.key,o)).join('')}
+    </div>
+  `);
+}
+
+/* ══ BRAND THANK YOU ══ */
+function showBrandThankYou(){
+  render(`
+    <div class="s-header" style="border-bottom:none;padding-bottom:8px">
+      </div>
+    <div class="s-body" style="padding-top:8px;text-align:center">
+      <div class="s-ty-icon">🌱</div>
+      <div class="s-qhead" style="font-size:22px;margin-bottom:10px">That's a wrap!</div>
+      <p style="font-size:14px;color:var(--text-md);line-height:1.6;margin-bottom:22px">We're building a discovery platform for emerging brands.<br>Want early access and a say in how it works?</p>
+      <input class="s-input" id="nm" type="text" placeholder="Your name (so we can say hi properly)"/>
+      <input class="s-input" id="eml" type="email" placeholder="your@email.com"/>
+      <button class="s-btn" onclick="submitBrand()">Yes, get me early access</button>
+      <button class="s-btn-ghost" onclick="submitBrand(true)">No thanks</button>
+      <p class="s-microcopy">No spam. One email when we're live.</p>
+    </div>
+  `);
+}
+function submitBrand(skip){
+  const email=skip?'':(document.getElementById('eml')?.value||'');
+  const name=skip?'':(document.getElementById('nm')?.value||'');
+  S.early_access_email=email;S.respondent_name=name;sendData(()=>showFinal('brand'));
+}
+
+/* ══ SUBMIT ══ */
+function sendData(cb){
+  render(`<div style="text-align:center;padding:60px 20px;color:var(--orange);font-size:15px;font-weight:500">Submitting your response…</div>`);
+  const NA='N/A';
+  const val=(x)=>x&&String(x).trim()?x:NA;
+  const base={
+    id:'r_'+Math.random().toString(36).slice(2,10),
+    timestamp:new Date().toISOString(),
+    segment:val(S.segment),
+    device:window.innerWidth<600?'mobile':'desktop',
+    completion_time_seconds:Math.round((Date.now()-S.startTime)/1000),
+    respondent_name:val(S.respondent_name),
+    waitlist_email:val(S.waitlist_email),
+    early_access_email:val(S.early_access_email),
+    discovery_frequency:val(S.discovery_frequency),
+    last_discovery_channel:val(S.last_discovery_channel),
+    algorithm_feeling:val(S.algorithm_feeling),
+    platform_intent:val(S.platform_intent),
+    first_customer:val(S.first_customer),
+    first_10:val(S.first_10),
+    current_main:val(S.current_main),
+    wishlist:val(S.wishlist),
+    bottleneck:val(S.bottleneck),
+    cac_monthly:val(S.cac_monthly),
+    marketplace_fee_pct:val(S.marketplace_fee_pct),
+    commission_12pct:val(S.commission_12pct),
+    trust_requirement:val(S.trust_requirement)
+  };
+
+  const flatPairs={};
+  for(let i=1;i<=8;i++){flatPairs[`pair_${i}`]=val(S.trade_offs[`pair_${i}`]);}
+
+  const flatTrust={};
+  for(let i=1;i<=6;i++){flatTrust[`trust_rank_${i}`]=val(S.trust_ladder[i-1]);}
+
+  const legacy={
+    startTime:S.startTime||Date.now(),
+    trade_offs:S.trade_offs||{},
+    trust_ladder:S.trust_ladder||[],
+    origin_story:{
+      first_customer:val(S.first_customer),
+      first_10:val(S.first_10),
+      current_main:val(S.current_main),
+      wishlist:val(S.wishlist),
+      bottleneck:val(S.bottleneck)
+    }
+  };
+
+  const payload={...base,...flatPairs,...flatTrust,...legacy};
+  fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(cb).catch(cb);
+}
+function showFinal(seg){
+  render(`
+    <div class="s-header" style="border-bottom:none"></div>
+    <div class="s-body" style="text-align:center;padding-top:12px">
+      <div class="s-ty-icon">${seg==='buyer'?'✨':'🚀'}</div>
+      <div class="s-qhead" style="font-size:22px;margin-bottom:12px">${seg==='buyer'?'Thank you for shaping this.':'You\'re on the list.'}</div>
+      <p style="font-size:14px;color:var(--text-md);line-height:1.65">${seg==='buyer'?'Your answers help us build something genuinely useful for people who want more from discovery.':'We\'ll be in touch before we open to the public. Your input will shape how this works.'}</p>
+    </div>
+  `);
+}
+</script>
+</body>
+</html>
