@@ -292,6 +292,33 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
 .s-back-btn:active {
   transform: scale(0.95);
 }
+
+/* Next / Forward Button */
+.s-forward-btn {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: var(--text-md);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  z-index: 10;
+}
+.s-forward-btn:hover {
+  background: var(--peach);
+  color: var(--text);
+}
+.s-forward-btn:active {
+  transform: scale(0.95);
+}
 </style>
 </head>
 <body>
@@ -382,6 +409,7 @@ const BRAND_Q=[
 
 let pairIdx=0,habitIdx=0,sceneIdx=0,brandQIdx=0;
 const historyStack = [];
+const forwardStack = [];
 
 function pushState() {
   historyStack.push({
@@ -395,6 +423,16 @@ function pushState() {
 
 function goBack() {
   if (historyStack.length === 0) return;
+  
+  // Push current state to forward stack
+  forwardStack.push({
+    pairIdx,
+    habitIdx,
+    sceneIdx,
+    brandQIdx,
+    S: JSON.parse(JSON.stringify(S))
+  });
+  
   const prevState = historyStack.pop();
   
   pairIdx = prevState.pairIdx;
@@ -404,11 +442,35 @@ function goBack() {
   
   Object.assign(S, prevState.S);
   
+  renderCurrentScreen();
+}
+
+function goNext() {
+  if (forwardStack.length === 0) return;
+  
+  // Push current state to history stack
+  pushState();
+  
+  const nextState = forwardStack.pop();
+  
+  pairIdx = nextState.pairIdx;
+  habitIdx = nextState.habitIdx;
+  sceneIdx = nextState.sceneIdx;
+  brandQIdx = nextState.brandQIdx;
+  
+  Object.assign(S, nextState.S);
+  
+  renderCurrentScreen();
+}
+
+function renderCurrentScreen() {
   if (S.segment === 'buyer') {
     if (pairIdx < 8 && habitIdx === 0) {
       showBuyerPair();
     } else if (habitIdx < 4) {
       showHabit();
+    } else {
+      showBuyerThankYou();
     }
   } else if (S.segment === 'brand') {
     if (sceneIdx < 5 && pairIdx === 0) {
@@ -417,6 +479,8 @@ function goBack() {
       showBrandPair();
     } else if (brandQIdx < 4) {
       showBrandQ();
+    } else {
+      showBrandThankYou();
     }
   }
 }
@@ -435,18 +499,20 @@ function scenebar(total,cur){
 /* ── Survey header band ── */
 function hdr(dotsHtml,counterText,heading,sparkle){
   const showBack = historyStack.length > 0;
+  const showForward = forwardStack.length > 0;
   return`<div class="s-header">
     ${showBack ? `<button class="s-back-btn" onclick="goBack()" title="Go Back">←</button>` : ''}
     ${dotsHtml}
     ${sparkle?`<div class="s-sparkle-tl">✦</div>`:''}
     <div class="s-counter">${counterText}</div>
+    ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
   </div>
   <div style="padding:16px 20px 0;"><div class="s-qhead">${heading}</div></div>`;
 }
 
 /* ── Option 1 pair card ── */
-function pairCard(text,icon,illus,id,onclick){
-  return`<div class="o1-option" id="${id}" onclick="${onclick}">
+function pairCard(text,icon,illus,id,onclick,extraClass=''){
+  return`<div class="o1-option ${extraClass}" id="${id}" onclick="${onclick}">
     <div class="o1-icon">${icon}</div>
     <div class="o1-text">${text}</div>
   </div>`;
@@ -454,7 +520,8 @@ function pairCard(text,icon,illus,id,onclick){
 
 /* ── Generic option with dot ── */
 function optBtn(text,icon,key,val){
-  return`<button class="s-opt" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
+  const isSelected = S[key] === val;
+  return`<button class="s-opt ${isSelected ? 'selected' : ''}" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
     <div class="s-opt-dot"></div>
     <span style="font-size:18px;flex-shrink:0">${icon}</span>
     <span>${text}</span>
@@ -476,17 +543,20 @@ function showBuyerPair(){
   if(pairIdx>=8){habitIdx=0;showHabit();return;}
   const [a,b]=PAIRS[pairIdx];
   const [ia,ib,ea,eb]=PAIR_META[pairIdx];
+  const currentSelection = S.trade_offs[`pair_${pairIdx+1}`];
+  const classA = currentSelection === a ? 'selected' : '';
+  const classB = currentSelection === b ? 'selected' : '';
   render(`
     ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
     <div class="s-body">
-      ${pairCard(a,ia,ea,'pa','pickPair(0)')}
-      ${pairCard(b,ib,eb,'pb','pickPair(1)')}
-
+      ${pairCard(a,ia,ea,'pa','pickPair(0)',classA)}
+      ${pairCard(b,ib,eb,'pb','pickPair(1)',classB)}
     </div>
   `);
 }
 function pickPair(idx){
   pushState();
+  forwardStack.length = 0;
   S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?0:1];
   document.querySelectorAll('.o1-option').forEach(el=>el.style.pointerEvents='none');
   document.getElementById(idx===0?'pa':'pb').classList.add('selected');
@@ -506,6 +576,7 @@ function showHabit(){
 }
 function pickOpt(key,val,el){
   pushState();
+  forwardStack.length = 0;
   S[key]=val;el.classList.add('selected');
   setTimeout(()=>{
     if(key==='discovery_frequency'||key==='last_discovery_channel'||key==='algorithm_feeling'||key==='platform_intent'){habitIdx++;showHabit();}
@@ -517,9 +588,11 @@ function pickOpt(key,val,el){
 /* ══ BUYER THANK YOU ══ */
 function showBuyerThankYou(){
   const showBack = historyStack.length > 0;
+  const showForward = forwardStack.length > 0;
   render(`
     <div class="s-header" style="border-bottom:none;padding-bottom:8px">
       ${showBack ? `<button class="s-back-btn" onclick="goBack()" title="Go Back">←</button>` : ''}
+      ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
     </div>
     <div class="s-body" style="padding-top:8px;text-align:center">
       <div class="s-ty-icon">✓</div>
@@ -566,11 +639,13 @@ function showScene(){
   if(sceneIdx>=5){pairIdx=0;showBrandPair();return;}
   const sc=SCENES[sceneIdx];
   const showBack = historyStack.length > 0;
+  const showForward = forwardStack.length > 0;
   render(`
     <div class="s-header">
       ${showBack ? `<button class="s-back-btn" onclick="goBack()" title="Go Back">←</button>` : ''}
       ${scenebar(5,sceneIdx)}
       <div class="s-counter">SCENE ${sceneIdx+1} OF 5</div>
+      ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
     </div>
     <div style="padding:14px 20px 0"><div class="s-qhead" style="font-size:20px">${sc.q}</div></div>
     <div class="s-body">
@@ -584,17 +659,20 @@ function showBrandPair(){
   if(pairIdx>=8){brandQIdx=0;showBrandQ();return;}
   const [a,b]=PAIRS[pairIdx];
   const [ia,ib,ea,eb]=PAIR_META[pairIdx];
+  const currentSelection = S.trade_offs[`pair_${pairIdx+1}`];
+  const classA = currentSelection === a ? 'selected' : '';
+  const classB = currentSelection === b ? 'selected' : '';
   render(`
     ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
     <div class="s-body">
-      ${pairCard(a,ia,ea,'pa','pickBrandPair(0)')}
-      ${pairCard(b,ib,eb,'pb','pickBrandPair(1)')}
-
+      ${pairCard(a,ia,ea,'pa','pickBrandPair(0)',classA)}
+      ${pairCard(b,ib,eb,'pb','pickBrandPair(1)',classB)}
     </div>
   `);
 }
 function pickBrandPair(idx){
   pushState();
+  forwardStack.length = 0;
   S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?0:1];
   document.querySelectorAll('.o1-option').forEach(el=>el.style.pointerEvents='none');
   document.getElementById(idx===0?'pa':'pb').classList.add('selected');
@@ -606,11 +684,13 @@ function showBrandQ(){
   if(brandQIdx>=4){showBrandThankYou();return;}
   const q=BRAND_Q[brandQIdx];
   const showBack = historyStack.length > 0;
+  const showForward = forwardStack.length > 0;
   render(`
     <div class="s-header">
       ${showBack ? `<button class="s-back-btn" onclick="goBack()" title="Go Back">←</button>` : ''}
       ${dots(4,brandQIdx)}
       <div class="s-counter">${brandQIdx+1} OF 4</div>
+      ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
     </div>
     <div style="padding:14px 20px 0"><div class="s-qhead" style="font-size:19px">${q.q}</div></div>
     <div class="s-body">
@@ -622,9 +702,11 @@ function showBrandQ(){
 /* ══ BRAND THANK YOU ══ */
 function showBrandThankYou(){
   const showBack = historyStack.length > 0;
+  const showForward = forwardStack.length > 0;
   render(`
     <div class="s-header" style="border-bottom:none;padding-bottom:8px">
       ${showBack ? `<button class="s-back-btn" onclick="goBack()" title="Go Back">←</button>` : ''}
+      ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
     </div>
     <div class="s-body" style="padding-top:8px;text-align:center">
       <div class="s-ty-icon">🌱</div>
