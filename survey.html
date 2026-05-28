@@ -759,28 +759,34 @@ function sendData(cb){
     segment:val(S.segment),
     device:window.innerWidth<600?'mobile':'desktop',
     completion_time_seconds:Math.round((Date.now()-S.startTime)/1000),
-    respondent_name:val(S.respondent_name),
-    email:val(S.email),
-    discovery_frequency:val(S.discovery_frequency),
-    last_discovery_channel:val(S.last_discovery_channel),
-    algorithm_feeling:val(S.algorithm_feeling),
-    platform_intent:val(S.platform_intent),
-    first_customer:val(S.first_customer),
-    first_10:val(S.first_10),
-    current_main:val(S.current_main),
-    wishlist:val(S.wishlist),
-    bottleneck:val(S.bottleneck),
-    cac_monthly:val(S.cac_monthly),
-    marketplace_fee_pct:val(S.marketplace_fee_pct),
-    commission_12pct:val(S.commission_12pct),
-    trust_requirement:val(S.trust_requirement)
+    "Your Name":val(S.respondent_name),
+    "Email":val(S.email),
+    // Buyer Questions
+    "How often do you actively look for new brands?":val(S.discovery_frequency),
+    "When you last discovered a brand you loved, where did you find it?":val(S.last_discovery_channel),
+    "How do you feel about the brands Instagram shows you?":val(S.algorithm_feeling),
+    "If there was a place that only showed you new, emerging brands — would you check it?":val(S.platform_intent),
+    // Brand Origin Questions
+    "Where did customer #1 come from?":val(S.first_customer),
+    "How did most of your first 10 customers find you?":val(S.first_10),
+    "Where do MOST of your customers come from now?":val(S.current_main),
+    "If you could wave a wand — where would you WANT customers to come from?":val(S.wishlist),
+    "What's stopping you from getting customers the way you want?":val(S.bottleneck),
+    // Brand Growth Questions
+    "How much do you spend monthly trying to acquire new customers?":val(S.cac_monthly),
+    "What % of your revenue goes to marketplace fees?":val(S.marketplace_fee_pct),
+    "If a new platform charged 12% commission but brought you new customers — would you join?":val(S.commission_12pct),
+    "What would make you trust a new platform enough to list your brand?":val(S.trust_requirement)
   };
 
   const flatPairs={};
-  for(let i=1;i<=8;i++){flatPairs[`pair_${i}`]=val(S.trade_offs[`pair_${i}`]);}
+  for(let i=1;i<=8;i++){
+    const questionHeader = `Pair ${i}: ${PAIRS[i-1][0]} vs ${PAIRS[i-1][1]}`;
+    flatPairs[questionHeader]=val(S.trade_offs[`pair_${i}`]);
+  }
 
   const flatTrust={};
-  for(let i=1;i<=6;i++){flatTrust[`trust_rank_${i}`]=val(S.trust_ladder[i-1]);}
+  for(let i=1;i<=6;i++){flatTrust[`Trust Rank ${i}`]=val(S.trust_ladder[i-1]);}
 
   const legacy={
     startTime:S.startTime||Date.now(),
