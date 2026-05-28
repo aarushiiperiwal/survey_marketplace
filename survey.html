@@ -364,7 +364,7 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
 <script>
 const WEBHOOK="https://script.google.com/macros/s/AKfycbw9oFn6OtZlfMRxRQL2Oev1SaUNjHTegoVkXajNhhUHOYFBaGjPllvroEob8DO88Bt7/exec";
 
-const S={segment:null,startTime:0,trade_offs:{},trust_ladder:[],origin_story:{},discovery_frequency:'',last_discovery_channel:'',algorithm_feeling:'',platform_intent:'',waitlist_email:'',early_access_email:'',respondent_name:'',cac_monthly:'',marketplace_fee_pct:'',commission_12pct:'',trust_requirement:''};
+const S={segment:null,startTime:0,trade_offs:{},trust_ladder:[],origin_story:{},discovery_frequency:'',last_discovery_channel:'',algorithm_feeling:'',platform_intent:'',email:'',respondent_name:'',cac_monthly:'',marketplace_fee_pct:'',commission_12pct:'',trust_requirement:''};
 
 /* Pair emojis: [left icon, right icon, left illus, right illus] */
 const PAIR_META=[
@@ -544,8 +544,8 @@ function showBuyerPair(){
   const [a,b]=PAIRS[pairIdx];
   const [ia,ib,ea,eb]=PAIR_META[pairIdx];
   const currentSelection = S.trade_offs[`pair_${pairIdx+1}`];
-  const classA = currentSelection === a ? 'selected' : '';
-  const classB = currentSelection === b ? 'selected' : '';
+  const classA = currentSelection === PAIRS[pairIdx][2] ? 'selected' : '';
+  const classB = currentSelection === PAIRS[pairIdx][3] ? 'selected' : '';
   render(`
     ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
     <div class="s-body">
@@ -557,7 +557,7 @@ function showBuyerPair(){
 function pickPair(idx){
   pushState();
   forwardStack.length = 0;
-  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?0:1];
+  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?2:3];
   document.querySelectorAll('.o1-option').forEach(el=>el.style.pointerEvents='none');
   document.getElementById(idx===0?'pa':'pb').classList.add('selected');
   setTimeout(()=>{pairIdx++;showBuyerPair();},320);
@@ -627,9 +627,9 @@ function submitBuyer(skip){
       }
       return;
     }
-    S.waitlist_email=email;S.respondent_name=name;
+    S.email=email;S.respondent_name=name;
   } else {
-    S.waitlist_email='';S.respondent_name='';
+    S.email='';S.respondent_name='';
   }
   sendData(()=>showFinal('buyer'));
 }
@@ -660,8 +660,8 @@ function showBrandPair(){
   const [a,b]=PAIRS[pairIdx];
   const [ia,ib,ea,eb]=PAIR_META[pairIdx];
   const currentSelection = S.trade_offs[`pair_${pairIdx+1}`];
-  const classA = currentSelection === a ? 'selected' : '';
-  const classB = currentSelection === b ? 'selected' : '';
+  const classA = currentSelection === PAIRS[pairIdx][2] ? 'selected' : '';
+  const classB = currentSelection === PAIRS[pairIdx][3] ? 'selected' : '';
   render(`
     ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
     <div class="s-body">
@@ -673,7 +673,7 @@ function showBrandPair(){
 function pickBrandPair(idx){
   pushState();
   forwardStack.length = 0;
-  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?0:1];
+  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?2:3];
   document.querySelectorAll('.o1-option').forEach(el=>el.style.pointerEvents='none');
   document.getElementById(idx===0?'pa':'pb').classList.add('selected');
   setTimeout(()=>{pairIdx++;showBrandPair();},320);
@@ -741,9 +741,9 @@ function submitBrand(skip){
       }
       return;
     }
-    S.early_access_email=email;S.respondent_name=name;
+    S.email=email;S.respondent_name=name;
   } else {
-    S.early_access_email='';S.respondent_name='';
+    S.email='';S.respondent_name='';
   }
   sendData(()=>showFinal('brand'));
 }
@@ -760,8 +760,7 @@ function sendData(cb){
     device:window.innerWidth<600?'mobile':'desktop',
     completion_time_seconds:Math.round((Date.now()-S.startTime)/1000),
     respondent_name:val(S.respondent_name),
-    waitlist_email:val(S.waitlist_email),
-    early_access_email:val(S.early_access_email),
+    email:val(S.email),
     discovery_frequency:val(S.discovery_frequency),
     last_discovery_channel:val(S.last_discovery_channel),
     algorithm_feeling:val(S.algorithm_feeling),
@@ -797,7 +796,13 @@ function sendData(cb){
   };
 
   const payload={...base,...flatPairs,...flatTrust,...legacy};
-  fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(cb).catch(cb);
+  fetch(WEBHOOK,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload),
+    keepalive:true
+  }).then(cb).catch(cb);
 }
 function showFinal(seg){
   render(`
