@@ -786,10 +786,6 @@ function sendData(cb){
     payload[questionHeader]=val(S.trade_offs[`pair_${i}`]);
   }
 
-  // Add flat trust ranks
-  for(let i=1;i<=6;i++){
-    payload[`Trust Rank ${i}`]=val(S.trust_ladder[i-1]);
-  }
 
   fetch(WEBHOOK,{
     method:'POST',
