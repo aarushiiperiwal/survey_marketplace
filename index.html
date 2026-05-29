@@ -509,10 +509,10 @@ function pairCard(text,icon,illus,id,onclick,extraClass=''){
 }
 
 /* ── Generic option with dot ── */
-function optBtn(text,icon,key,val,idx){
+function optBtn(text, icon, key, val, idx) {
   const isSelected = S[key] === val;
-  return`<button id="opt-${key}-${idx}" class="s-opt ${isSelected ? 'selected' : ''}" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
-    <div class="s-opt-dot"></div>
+  return `<button id="opt-${idx}" class="s-opt ${isSelected ? 'selected' : ''}" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
+    <div class="s-opt-dot ${isSelected ? 'selected' : ''}"></div>
     <span style="font-size:18px;flex-shrink:0">${icon}</span>
     <span>${text}</span>
   </button>`;
@@ -563,16 +563,28 @@ function showHabit(){
       ${h.opts.map((o,i)=>optBtn(o,h.icons?.[i]||'•',h.key,o,i)).join('')}
     </div>
   `);
-}
-function pickOpt(key,val,el){
+function pickOpt(key, val, el) {
   pushState();
   forwardStack.length = 0;
-  S[key]=val;el.classList.add('selected');
-  setTimeout(()=>{
-    if(['discovery_frequency','last_discovery_channel','algorithm_feeling','platform_intent','same_brands','frustration'].includes(key)){habitIdx++;showHabit();}
-    else if(['first_customer','first_10','current_main','wishlist','bottleneck','growth_challenge'].includes(key)){sceneIdx++;showScene();}
-    else if(['cac_monthly','marketplace_fee_pct','commission_12pct','trust_requirement','marketplace_value'].includes(key)){brandQIdx++;showBrandQ();}
-  },260);
+  S[key] = val;
+
+  // Clear all selected states first, then apply to clicked
+  document.querySelectorAll('.s-opt').forEach(btn => {
+    btn.classList.remove('selected');
+    btn.querySelector('.s-opt-dot')?.classList.remove('selected');
+  });
+  el.classList.add('selected');
+  el.querySelector('.s-opt-dot')?.classList.add('selected');
+
+  setTimeout(() => {
+    if (['discovery_frequency','last_discovery_channel','algorithm_feeling','platform_intent','same_brands','frustration'].includes(key)) {
+      habitIdx++; showHabit();
+    } else if (['first_customer','first_10','current_main','wishlist','bottleneck','growth_challenge'].includes(key)) {
+      sceneIdx++; showScene();
+    } else if (['cac_monthly','marketplace_fee_pct','commission_12pct','trust_requirement','marketplace_value'].includes(key)) {
+      brandQIdx++; showBrandQ();
+    }
+  }, 260);
 }
 
 /* ══ BUYER THANK YOU ══ */
