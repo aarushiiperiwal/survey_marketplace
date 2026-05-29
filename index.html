@@ -538,7 +538,7 @@ function showBuyerPair(){
   const classB = currentSelection === PAIRS[pairIdx][3] ? 'selected' : '';
   render(`
     ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
-    <div class="s-body">
+    <div class="s-body" id="body-buyer-pair-${pairIdx}">
       ${pairCard(a,ia,ea,'pa-' + pairIdx,'pickPair(0)',classA)}
       ${pairCard(b,ib,eb,'pb-' + pairIdx,'pickPair(1)',classB)}
     </div>
@@ -559,7 +559,7 @@ function showHabit(){
   const h=DISC_HABITS[habitIdx];
   render(`
     ${hdr(dots(DISC_HABITS.length,habitIdx),`${habitIdx+1} OF ${DISC_HABITS.length}`,h.q,false)}
-    <div class="s-body">
+    <div class="s-body" id="body-habit-${h.key}">
       ${h.opts.map((o,i)=>optBtn(o,h.icons?.[i]||'•',h.key,o,i)).join('')}
     </div>
   `);
@@ -651,7 +651,7 @@ function showScene(){
       ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
     </div>
     <div style="padding:14px 20px 0"><div class="s-qhead" style="font-size:20px">${sc.q}</div></div>
-    <div class="s-body">
+    <div class="s-body" id="body-scene-${sc.key}">
       ${sc.opts.map((o,i)=>optBtn(o,sc.icons?.[i]||'•',sc.key,o,i)).join('')}
     </div>
   `);
@@ -667,7 +667,7 @@ function showBrandPair(){
   const classB = currentSelection === PAIRS[pairIdx][3] ? 'selected' : '';
   render(`
     ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
-    <div class="s-body">
+    <div class="s-body" id="body-brand-pair-${pairIdx}">
       ${pairCard(a,ia,ea,'pa-' + pairIdx,'pickBrandPair(0)',classA)}
       ${pairCard(b,ib,eb,'pb-' + pairIdx,'pickBrandPair(1)',classB)}
     </div>
@@ -696,7 +696,7 @@ function showBrandQ(){
       ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
     </div>
     <div style="padding:14px 20px 0"><div class="s-qhead" style="font-size:19px">${q.q}</div></div>
-    <div class="s-body">
+    <div class="s-body" id="body-brand-q-${q.key}">
       ${q.opts.map((o,i)=>optBtn(o,q.icons?.[i]||'•',q.key,o,i)).join('')}
     </div>
   `);
