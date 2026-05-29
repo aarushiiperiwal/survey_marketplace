@@ -364,7 +364,7 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
 <script>
 const WEBHOOK="https://script.google.com/macros/s/AKfycbzbBRElFSntdot90i-dyRlQthgLLga9EXRBrC7o9CgmDS9_O3VTjmVzR3LDO71DQwvf/exec";
 
-const S={segment:null,startTime:0,trade_offs:{},trust_ladder:[],origin_story:{},discovery_frequency:'',last_discovery_channel:'',algorithm_feeling:'',platform_intent:'',email:'',respondent_name:'',cac_monthly:'',marketplace_fee_pct:'',commission_12pct:'',trust_requirement:''};
+const S={segment:null,startTime:0,trade_offs:{},trust_ladder:[],origin_story:{},discovery_frequency:'',last_discovery_channel:'',algorithm_feeling:'',platform_intent:'',same_brands:'',frustration:'',email:'',respondent_name:'',cac_monthly:'',marketplace_fee_pct:'',commission_12pct:'',trust_requirement:'',growth_challenge:'',marketplace_value:''};
 
 /* Pair emojis: [left icon, right icon, left illus, right illus] */
 const PAIR_META=[
@@ -379,32 +379,36 @@ const PAIR_META=[
 ];
 const PAIRS=[
   ["A brand 10,000 people love","A brand you've never heard of with stunning products","popular","unknown"],
-  ["Scrolling Instagram until something catches your eye","A curated feed of brands chosen just for you","scrolling","curated"],
-  ["Finding the perfect thing takes time — that's part of the fun","Finding the perfect thing should be instant","takes_time","instant"],
-  ["I trust brands my friends recommend","I trust brands an expert curator recommends","friends","curator"],
+  ["Scrolling Instagram until something catches your eye","Finding relevant brands without endless searching","scrolling","curated"],
+  ["I enjoy browsing and discovering products","I want the fastest route to the right product/brand","takes_time","instant"],
+  ["I trust brands recommended by people I know","I trust brands recommended by a platform that understands my taste","friends","curator"],
   ["I want to discover brands before everyone else knows them","I only buy brands that already have social proof","early_adopter","social_proof"],
-  ["Shopping is about the product","Shopping is about the story behind the brand","product","story"],
-  ["I'm happy with how I discover new brands today","Discovery feels broken — I'm missing great brands","happy","broken"],
+  ["I only care whether the product is good","I enjoy discovering the people and story behind a brand","product","story"],
+  ["I'm happy with how I discover new brands today","Discovery feels broken, I'm missing great brands","happy","broken"],
   ["I'd pay more for a product from a homegrown brand","Price matters more than where the brand is from","homegrown_premium","price_first"]
 ];
 const DISC_HABITS=[
-  {q:"How often do you actively look for new brands?",key:"discovery_frequency",opts:["Daily","Weekly","Monthly","Only when I need something specific","Rarely"],icons:["📅","🗓️","📆","🛒","😴"]},
-  {q:"When you last discovered a brand you loved, where did you find it?",key:"last_discovery_channel",opts:["Instagram/social media","Friend recommended it","Physical store or market","Existing marketplace (Amazon, Myntra, etc)","Google search","Blog or magazine","Can't remember"],icons:["📸","👥","🏪","🛍️","🔍","📰","🤷"]},
+  {q:"How often do you discover a new brand you genuinely like?",key:"discovery_frequency",opts:["Daily","Weekly","Monthly","Rarely"],icons:["📅","🗓️","📆","😴"]},
+  {q:"When you last discovered a brand you loved, where did you find it?",key:"last_discovery_channel",opts:["Instagram/social media","Friend recommended it","Physical store or market","Existing marketplace (Amazon, Myntra, etc)","Google search","Can't remember"],icons:["📸","👥","🏪","🛍️","🔍","🤷"]},
   {q:"How do you feel about the brands Instagram shows you?",key:"algorithm_feeling",opts:["Same things over and over","Mostly relevant to me","Too random","I don't use Instagram for discovery"],icons:["🔁","✅","🎲","❌"]},
-  {q:"If there was a place that only showed you new, emerging brands — would you check it?",key:"platform_intent",opts:["Yes, I'd visit regularly","Maybe occasionally","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]}
+  {q:"If there was a place that only showed you new, emerging brands, would you check it?",key:"platform_intent",opts:["Yes, I'd visit regularly","Maybe occasionally","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]},
+  {q:"How often do you feel you're seeing the same brands repeatedly?",key:"same_brands",opts:["Almost always","Often","Sometimes","Rarely"]},
+  {q:"What frustrates you most about discovering new brands?",key:"frustration",opts:["Seeing the same brands everywhere","Too many options","Finding niche brands takes too much effort","Nothing frustrates me"]}
 ];
 const SCENES=[
   {q:"Where did customer #1 come from?",key:"first_customer",opts:["Friend or family","Instagram post","Word of mouth","Local market or event","Online marketplace","Other"],icons:["👨‍👩‍👧","📸","💬","🏪","🛒","➕"]},
   {q:"How did most of your first 10 customers find you?",key:"first_10",opts:["Instagram organically","Paid Instagram ads","WhatsApp forwards","Physical presence (market/store)","Existing marketplace listing","Other"],icons:["📲","💸","📱","🏬","🛍️","➕"]},
   {q:"Where do MOST of your customers come from now?",key:"current_main",opts:["Instagram (organic)","Instagram (paid ads)","Marketplaces (Amazon, Flipkart, Myntra, etc)","Your own website","Repeat customers","Word of mouth","Other"],icons:["📲","💸","🛒","🌐","🔄","💬","➕"]},
-  {q:"If you could wave a wand — where would you WANT customers to come from?",key:"wishlist",opts:["A dedicated discovery platform for emerging brands","More organic Instagram reach","Stronger word of mouth","My own brand website","Physical retail presence","Other"],icons:["✨","📸","💬","🌐","🏪","➕"]},
-  {q:"What's stopping you from getting customers the way you want?",key:"bottleneck",opts:["Can't afford ads","Algorithm doesn't show my posts","Hard to build trust with new customers","No presence on right platforms","Other"],icons:["💸","📉","🔒","📡","➕"]}
+  {q:"If you could wave a wand, where would you WANT customers to come from?",key:"wishlist",opts:["A dedicated discovery platform for emerging brands","More organic Instagram reach","Stronger word of mouth","My own brand website","Physical retail presence","Other"],icons:["✨","📸","💬","🌐","🏪","➕"]},
+  {q:"What's stopping you from getting customers the way you want?",key:"bottleneck",opts:["Can't afford ads","Algorithm doesn't show my posts","Hard to build trust with new customers","No presence on right platforms","Other"],icons:["💸","📉","🔒","📡","➕"]},
+  {q:"What's your biggest growth challenge today?",key:"growth_challenge", opts:["Getting discovered","Getting repeat customers","Advertising costs","Standing out from competitors","Building trust"]}
 ];
 const BRAND_Q=[
   {q:"How much do you spend monthly trying to acquire new customers?",key:"cac_monthly",opts:["Under ₹5,000","₹5,000–₹20,000","₹20,000–₹50,000","Over ₹50,000","Nothing — all organic"],icons:["💵","💰","💳","🏦","🌱"]},
   {q:"What % of your revenue goes to marketplace fees?",key:"marketplace_fee_pct",opts:["0% — I don't use marketplaces","Under 10%","10–20%","20–30%","Over 30%"],icons:["✅","📊","📈","📉","😰"]},
-  {q:"If a new platform charged 12% commission but brought you new customers — would you join?",key:"commission_12pct",opts:["Yes, immediately","Maybe — need to see results first","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]},
-  {q:"What would make you trust a new platform enough to list your brand?",key:"trust_requirement",opts:["Seeing other brands succeed on it","A free trial period","Direct introduction from someone I trust","Guaranteed minimum orders","Nothing — I'm skeptical of new platforms"],icons:["👀","🆓","🤝","📦","😤"]}
+  {q:"If a new platform charged 12% commission but brought you new customers, would you join?",key:"commission_12pct",opts:["Yes, immediately","Maybe — need to see results first","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]},
+  {q:"What would make you trust a new platform enough to list your brand?",key:"trust_requirement",opts:["Seeing other brands succeed on it","A free trial period","Direct introduction from someone I trust","Guaranteed minimum orders","Nothing — I'm skeptical of new platforms"],icons:["👀","🆓","🤝","📦","😤"]},
+  {q:"If a customer discovers your brand on a marketplace, what matters most?",key:"marketplace_value",opts:["Quality of leads","Number of leads","Low commission","Brand visibility","Repeat customers"]}
 ];
 
 let pairIdx=0,habitIdx=0,sceneIdx=0,brandQIdx=0;
@@ -467,17 +471,17 @@ function renderCurrentScreen() {
   if (S.segment === 'buyer') {
     if (pairIdx < 8 && habitIdx === 0) {
       showBuyerPair();
-    } else if (habitIdx < 4) {
+    } else if (habitIdx < DISC_HABITS.length) {
       showHabit();
     } else {
       showBuyerThankYou();
     }
   } else if (S.segment === 'brand') {
-    if (sceneIdx < 5 && pairIdx === 0) {
+    if (sceneIdx < SCENES.length && pairIdx === 0) {
       showScene();
     } else if (pairIdx < 8 && brandQIdx === 0) {
       showBrandPair();
-    } else if (brandQIdx < 4) {
+    } else if (brandQIdx < BRAND_Q.length) {
       showBrandQ();
     } else {
       showBrandThankYou();
@@ -565,12 +569,12 @@ function pickPair(idx){
 
 /* ══ BUYER: Habits ══ */
 function showHabit(){
-  if(habitIdx>=4){showBuyerThankYou();return;}
+  if(habitIdx>=DISC_HABITS.length){showBuyerThankYou();return;}
   const h=DISC_HABITS[habitIdx];
   render(`
-    ${hdr(dots(4,habitIdx),`${habitIdx+1} OF 4`,h.q,false)}
+    ${hdr(dots(DISC_HABITS.length,habitIdx),`${habitIdx+1} OF ${DISC_HABITS.length}`,h.q,false)}
     <div class="s-body">
-      ${h.opts.map((o,i)=>optBtn(o,h.icons[i]||'•',h.key,o)).join('')}
+      ${h.opts.map((o,i)=>optBtn(o,h.icons?.[i]||'•',h.key,o)).join('')}
     </div>
   `);
 }
@@ -579,9 +583,9 @@ function pickOpt(key,val,el){
   forwardStack.length = 0;
   S[key]=val;el.classList.add('selected');
   setTimeout(()=>{
-    if(key==='discovery_frequency'||key==='last_discovery_channel'||key==='algorithm_feeling'||key==='platform_intent'){habitIdx++;showHabit();}
-    else if(['first_customer','first_10','current_main','wishlist','bottleneck'].includes(key)){sceneIdx++;showScene();}
-    else if(['cac_monthly','marketplace_fee_pct','commission_12pct','trust_requirement'].includes(key)){brandQIdx++;showBrandQ();}
+    if(['discovery_frequency','last_discovery_channel','algorithm_feeling','platform_intent','same_brands','frustration'].includes(key)){habitIdx++;showHabit();}
+    else if(['first_customer','first_10','current_main','wishlist','bottleneck','growth_challenge'].includes(key)){sceneIdx++;showScene();}
+    else if(['cac_monthly','marketplace_fee_pct','commission_12pct','trust_requirement','marketplace_value'].includes(key)){brandQIdx++;showBrandQ();}
   },260);
 }
 
@@ -636,20 +640,20 @@ function submitBuyer(skip){
 
 /* ══ BRAND: Scenes ══ */
 function showScene(){
-  if(sceneIdx>=5){pairIdx=0;showBrandPair();return;}
+  if(sceneIdx>=SCENES.length){pairIdx=0;showBrandPair();return;}
   const sc=SCENES[sceneIdx];
   const showBack = historyStack.length > 0;
   const showForward = forwardStack.length > 0;
   render(`
     <div class="s-header">
       ${showBack ? `<button class="s-back-btn" onclick="goBack()" title="Go Back">←</button>` : ''}
-      ${scenebar(5,sceneIdx)}
-      <div class="s-counter">SCENE ${sceneIdx+1} OF 5</div>
+      ${scenebar(SCENES.length,sceneIdx)}
+      <div class="s-counter">SCENE ${sceneIdx+1} OF ${SCENES.length}</div>
       ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
     </div>
     <div style="padding:14px 20px 0"><div class="s-qhead" style="font-size:20px">${sc.q}</div></div>
     <div class="s-body">
-      ${sc.opts.map((o,i)=>optBtn(o,sc.icons[i]||'•',sc.key,o)).join('')}
+      ${sc.opts.map((o,i)=>optBtn(o,sc.icons?.[i]||'•',sc.key,o)).join('')}
     </div>
   `);
 }
@@ -681,20 +685,20 @@ function pickBrandPair(idx){
 
 /* ══ BRAND: Growth Q ══ */
 function showBrandQ(){
-  if(brandQIdx>=4){showBrandThankYou();return;}
+  if(brandQIdx>=BRAND_Q.length){showBrandThankYou();return;}
   const q=BRAND_Q[brandQIdx];
   const showBack = historyStack.length > 0;
   const showForward = forwardStack.length > 0;
   render(`
     <div class="s-header">
       ${showBack ? `<button class="s-back-btn" onclick="goBack()" title="Go Back">←</button>` : ''}
-      ${dots(4,brandQIdx)}
-      <div class="s-counter">${brandQIdx+1} OF 4</div>
+      ${dots(BRAND_Q.length,brandQIdx)}
+      <div class="s-counter">${brandQIdx+1} OF ${BRAND_Q.length}</div>
       ${showForward ? `<button class="s-forward-btn" onclick="goNext()" title="Go Forward">→</button>` : ''}
     </div>
     <div style="padding:14px 20px 0"><div class="s-qhead" style="font-size:19px">${q.q}</div></div>
     <div class="s-body">
-      ${q.opts.map((o,i)=>optBtn(o,q.icons[i]||'•',q.key,o)).join('')}
+      ${q.opts.map((o,i)=>optBtn(o,q.icons?.[i]||'•',q.key,o)).join('')}
     </div>
   `);
 }
@@ -763,21 +767,25 @@ function sendData(cb){
     "Your Name": val(S.respondent_name),
     "Email": val(S.email),
     // Buyer Questions
-    "How often do you actively look for new brands?": val(S.discovery_frequency),
+    "How often do you discover a new brand you genuinely like?": val(S.discovery_frequency),
     "When you last discovered a brand you loved, where did you find it?": val(S.last_discovery_channel),
     "How do you feel about the brands Instagram shows you?": val(S.algorithm_feeling),
-    "If there was a place that only showed you new, emerging brands — would you check it?": val(S.platform_intent),
+    "If there was a place that only showed you new, emerging brands, would you check it?": val(S.platform_intent),
+    "How often do you feel you're seeing the same brands repeatedly?": val(S.same_brands),
+    "What frustrates you most about discovering new brands?": val(S.frustration),
     // Brand Origin Questions
     "Where did customer #1 come from?": val(S.first_customer),
     "How did most of your first 10 customers find you?": val(S.first_10),
     "Where do MOST of your customers come from now?": val(S.current_main),
-    "If you could wave a wand — where would you WANT customers to come from?": val(S.wishlist),
+    "If you could wave a wand, where would you WANT customers to come from?": val(S.wishlist),
     "What's stopping you from getting customers the way you want?": val(S.bottleneck),
+    "What's your biggest growth challenge today?": val(S.growth_challenge),
     // Brand Growth Questions
     "How much do you spend monthly trying to acquire new customers?": val(S.cac_monthly),
     "What % of your revenue goes to marketplace fees?": val(S.marketplace_fee_pct),
-    "If a new platform charged 12% commission but brought you new customers — would you join?": val(S.commission_12pct),
-    "What would make you trust a new platform enough to list your brand?": val(S.trust_requirement)
+    "If a new platform charged 12% commission but brought you new customers, would you join?": val(S.commission_12pct),
+    "What would make you trust a new platform enough to list your brand?": val(S.trust_requirement),
+    "If a customer discovers your brand on a marketplace, what matters most?": val(S.marketplace_value)
   };
 
   // Add flat pairs
