@@ -545,9 +545,9 @@ function showBuyerPair(){
   `);
 }
 function pickPair(idx){
+  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?2:3];
   pushState();
   forwardStack.length = 0;
-  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?2:3];
   document.querySelectorAll('.o1-option').forEach(el=>el.style.pointerEvents='none');
   document.getElementById(idx===0?('pa-'+pairIdx):('pb-'+pairIdx)).classList.add('selected');
   setTimeout(()=>{pairIdx++;showBuyerPair();},320);
@@ -565,9 +565,9 @@ function showHabit(){
   `);
 }
 function pickOpt(key, val, el) {
+  S[key] = val;
   pushState();
   forwardStack.length = 0;
-  S[key] = val;
 
   // Clear all selected states first, then apply to clicked
   document.querySelectorAll('.s-opt').forEach(btn => {
@@ -674,9 +674,9 @@ function showBrandPair(){
   `);
 }
 function pickBrandPair(idx){
+  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?2:3];
   pushState();
   forwardStack.length = 0;
-  S.trade_offs[`pair_${pairIdx+1}`]=PAIRS[pairIdx][idx===0?2:3];
   document.querySelectorAll('.o1-option').forEach(el=>el.style.pointerEvents='none');
   document.getElementById(idx===0?('pa-'+pairIdx):('pb-'+pairIdx)).classList.add('selected');
   setTimeout(()=>{pairIdx++;showBrandPair();},320);
