@@ -129,7 +129,6 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
 }
 .o1-option.selected .o1-icon{background:#FFE5C0;}
 .o1-text{flex:1;font-size:14px;font-weight:500;color:var(--text);line-height:1.45;}
-.o1-option.selected .s-opt-dot{background:var(--orange);border-color:var(--orange);}
 .o1-option .s-opt-dot{margin-left:auto;}
 
 .o1-vs{text-align:center;font-size:11px;color:#B4A090;letter-spacing:.05em;margin-bottom:0;margin-top:-4px;}
@@ -144,8 +143,25 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
 }
 .s-opt:hover{border-color:var(--orange);background:#FFF8EF;transform:translateY(-1px);box-shadow:0 4px 14px rgba(201,123,46,.1);}
 .s-opt.selected{border-color:var(--orange);background:#FFF3E0;font-weight:500;}
-.s-opt-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:background .15s,border-color .15s;}
-.s-opt.selected .s-opt-dot{background:var(--orange);border-color:var(--orange);}
+.s-opt-dot{
+  width:18px;height:18px;border-radius:50%;border:2px solid var(--border);
+  flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;
+  transition:border-color 0.15s;background:transparent;
+}
+.s-opt-dot::after{
+  content:'';width:8px;height:8px;border-radius:50%;
+  background:transparent;transition:background 0.15s;
+}
+.s-opt-dot.selected,
+.s-opt.selected .s-opt-dot,
+.o1-option.selected .s-opt-dot{
+  border-color:var(--orange);background:transparent;
+}
+.s-opt-dot.selected::after,
+.s-opt.selected .s-opt-dot::after,
+.o1-option.selected .s-opt-dot::after{
+  background:var(--orange);
+}
 
 /* Scene bar */
 .s-scene-bar{display:flex;gap:7px;margin-bottom:14px;}
@@ -236,6 +252,7 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
   .o1-text{font-size:12px;}
   .s-opt{padding:11px 10px;font-size:12px;gap:10px;}
   .s-opt-dot{width:16px;height:16px;}
+  .s-opt-dot::after{width:7px;height:7px;}
   .s-btn{padding:12px;font-size:14px;}
   .s-btn-ghost{font-size:12px;}
 }
