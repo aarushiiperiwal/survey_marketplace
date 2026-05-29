@@ -511,7 +511,7 @@ function pairCard(text,icon,illus,id,onclick,extraClass=''){
 /* ── Generic option with dot ── */
 function optBtn(text, icon, key, val, idx) {
   const isSelected = S[key] === val;
-  return `<button id="opt-${idx}" class="s-opt ${isSelected ? 'selected' : ''}" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
+  return `<button id="opt-${key}-${idx}" class="s-opt ${isSelected ? 'selected' : ''}" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
     <div class="s-opt-dot ${isSelected ? 'selected' : ''}"></div>
     <span style="font-size:18px;flex-shrink:0">${icon}</span>
     <span>${text}</span>
@@ -563,6 +563,7 @@ function showHabit(){
       ${h.opts.map((o,i)=>optBtn(o,h.icons?.[i]||'•',h.key,o,i)).join('')}
     </div>
   `);
+}
 function pickOpt(key, val, el) {
   pushState();
   forwardStack.length = 0;
