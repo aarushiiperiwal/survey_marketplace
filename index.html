@@ -379,33 +379,37 @@ const PAIR_META=[
 ];
 const PAIRS=[
   ["A brand 10,000 people love","A brand you've never heard of with stunning products","popular","unknown"],
-  ["Scrolling Instagram until something catches your eye","A curated feed of brands chosen just for you","scrolling","curated"],
-  ["Finding the perfect thing takes time — that's part of the fun","Finding the perfect thing should be instant","takes_time","instant"],
-  ["I trust brands my friends recommend","I trust brands an expert curator recommends","friends","curator"],
+  ["Scrolling Instagram until something catches your eye","Finding relevant brands without endless searching","scrolling","curated"],
+  ["I enjoy browsing and discovering products","I want the fastest route to the right product/brand","Finding the perfect thing should be timeless","takes_time","instant"],
+  ["I trust brands recommended by people I know","I trust brands recommended by a platform that understands my taste","friends","curator"],
   ["I want to discover brands before everyone else knows them","I only buy brands that already have social proof","early_adopter","social_proof"],
-  ["Shopping is about the product","Shopping is about the story behind the brand","product","story"],
-  ["I'm happy with how I discover new brands today","Discovery feels broken — I'm missing great brands","happy","broken"],
+  ["I only care whether the product is good","I enjoy discovering the people and story behind a brand","product","story"],
+  ["I'm happy with how I discover new brands today","Discovery feels broken, I'm missing great brands","happy","broken"],
   ["I'd pay more for a product from a homegrown brand","Price matters more than where the brand is from","homegrown_premium","price_first"]
 ];
 const DISC_HABITS=[
-  {q:"How often do you actively look for new brands?",key:"discovery_frequency",opts:["Daily","Weekly","Monthly","Only when I need something specific","Rarely"],icons:["📅","🗓️","📆","🛒","😴"]},
-  {q:"When you last discovered a brand you loved, where did you find it?",key:"last_discovery_channel",opts:["Instagram/social media","Friend recommended it","Physical store or market","Existing marketplace (Amazon, Myntra, etc)","Google search","Blog or magazine","Can't remember"],icons:["📸","👥","🏪","🛍️","🔍","📰","🤷"]},
+  {q:"How often do you discover a new brand you genuinely like?",key:"discovery_frequency",opts:["Daily","Weekly","Monthly","Rarely"],icons:["📅","🗓️","📆","😴"]},
+  {q:"When you last discovered a brand you loved, where did you find it?",key:"last_discovery_channel",opts:["Instagram/social media","Friend recommended it","Physical store or market","Existing marketplace (Amazon, Myntra, etc)","Google search","Can't remember"],icons:["📸","👥","🏪","🛍️","🔍","🤷"]},
   {q:"How do you feel about the brands Instagram shows you?",key:"algorithm_feeling",opts:["Same things over and over","Mostly relevant to me","Too random","I don't use Instagram for discovery"],icons:["🔁","✅","🎲","❌"]},
-  {q:"If there was a place that only showed you new, emerging brands — would you check it?",key:"platform_intent",opts:["Yes, I'd visit regularly","Maybe occasionally","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]}
+  {q:"If there was a place that only showed you new, emerging brands, would you check it?",key:"platform_intent",opts:["Yes, I'd visit regularly","Maybe occasionally","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]}
+  {q:"How often do you feel you're seeing the same brands repeatedly?",key:"same_brands",opts:["Almost always","Often","Sometimes","Rarely"]}
+  {q:"What frustrates you most about discovering new brands?",key:"frustration",opts:["Seeing the same brands everywhere","Too many options","Finding niche brands takes too much effort","Nothing frustrates me"]}
 ];
 const SCENES=[
   {q:"Where did customer #1 come from?",key:"first_customer",opts:["Friend or family","Instagram post","Word of mouth","Local market or event","Online marketplace","Other"],icons:["👨‍👩‍👧","📸","💬","🏪","🛒","➕"]},
   {q:"How did most of your first 10 customers find you?",key:"first_10",opts:["Instagram organically","Paid Instagram ads","WhatsApp forwards","Physical presence (market/store)","Existing marketplace listing","Other"],icons:["📲","💸","📱","🏬","🛍️","➕"]},
   {q:"Where do MOST of your customers come from now?",key:"current_main",opts:["Instagram (organic)","Instagram (paid ads)","Marketplaces (Amazon, Flipkart, Myntra, etc)","Your own website","Repeat customers","Word of mouth","Other"],icons:["📲","💸","🛒","🌐","🔄","💬","➕"]},
-  {q:"If you could wave a wand — where would you WANT customers to come from?",key:"wishlist",opts:["A dedicated discovery platform for emerging brands","More organic Instagram reach","Stronger word of mouth","My own brand website","Physical retail presence","Other"],icons:["✨","📸","💬","🌐","🏪","➕"]},
+  {q:"If you could wave a wand, where would you WANT customers to come from?",key:"wishlist",opts:["A dedicated discovery platform for emerging brands","More organic Instagram reach","Stronger word of mouth","My own brand website","Physical retail presence","Other"],icons:["✨","📸","💬","🌐","🏪","➕"]},
   {q:"What's stopping you from getting customers the way you want?",key:"bottleneck",opts:["Can't afford ads","Algorithm doesn't show my posts","Hard to build trust with new customers","No presence on right platforms","Other"],icons:["💸","📉","🔒","📡","➕"]}
-];
+  {q:"What's your biggest growth challenge today?",key:"growth_challenge", opts:["Getting discovered","Getting repeat customers","Advertising costs","Standing out from competitors","Building trust"]}
+  ];
 const BRAND_Q=[
   {q:"How much do you spend monthly trying to acquire new customers?",key:"cac_monthly",opts:["Under ₹5,000","₹5,000–₹20,000","₹20,000–₹50,000","Over ₹50,000","Nothing — all organic"],icons:["💵","💰","💳","🏦","🌱"]},
   {q:"What % of your revenue goes to marketplace fees?",key:"marketplace_fee_pct",opts:["0% — I don't use marketplaces","Under 10%","10–20%","20–30%","Over 30%"],icons:["✅","📊","📈","📉","😰"]},
-  {q:"If a new platform charged 12% commission but brought you new customers — would you join?",key:"commission_12pct",opts:["Yes, immediately","Maybe — need to see results first","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]},
+  {q:"If a new platform charged 12% commission but brought you new customers, would you join?",key:"commission_12pct",opts:["Yes, immediately","Maybe — need to see results first","Probably not","Definitely not"],icons:["🙌","🤔","😐","🚫"]},
   {q:"What would make you trust a new platform enough to list your brand?",key:"trust_requirement",opts:["Seeing other brands succeed on it","A free trial period","Direct introduction from someone I trust","Guaranteed minimum orders","Nothing — I'm skeptical of new platforms"],icons:["👀","🆓","🤝","📦","😤"]}
-];
+  {q:"If a customer discovers your brand on a marketplace, what matters most?",key:"marketplace_value",opts:["Quality of leads","Number of leads","Low commission","Brand visibility","Repeat customers"]}
+  ];
 
 let pairIdx=0,habitIdx=0,sceneIdx=0,brandQIdx=0;
 const historyStack = [];
