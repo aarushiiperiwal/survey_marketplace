@@ -151,19 +151,6 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
 .s-scene-seg.done{background:var(--orange);}
 .s-scene-seg.active{background:var(--orange);box-shadow:0 0 0 2px rgba(201,123,46,.2);}
 
-/* Drag (Trust Ladder) */
-.s-drag-list{margin-bottom:16px;}
-.s-drag-item{
-  display:flex;align-items:center;gap:10px;
-  padding:13px 14px;border:1.5px solid var(--border);border-radius:13px;
-  background:var(--card);margin-bottom:8px;cursor:grab;
-  user-select:none;font-size:13px;color:var(--text);
-  transition:box-shadow .15s,border-color .15s;
-}
-.s-drag-item.dragging{opacity:.45;cursor:grabbing;}
-.s-drag-item.over{border-color:var(--orange);background:#FFF8EF;}
-.s-rank-num{width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.s-drag-handle{color:#C4B09A;font-size:19px;flex-shrink:0;line-height:1;}
 
 /* Buttons */
 .s-btn{display:block;width:100%;padding:14px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:500;cursor:pointer;margin-top:4px;transition:background .15s;font-family:'DM Sans',sans-serif;}
@@ -199,7 +186,6 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
   .o1-icon{width:44px;height:44px;font-size:20px;}
   .o1-text{font-size:13px;}
   .s-opt{padding:12px 13px;font-size:13px;}
-  .s-drag-item{padding:11px 12px;font-size:12px;}
   .s-btn{padding:13px;font-size:14px;}
   .s-input{padding:12px 13px;font-size:14px;}
 }
@@ -364,7 +350,7 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
 <script>
 const WEBHOOK="https://script.google.com/macros/s/AKfycbzbBRElFSntdot90i-dyRlQthgLLga9EXRBrC7o9CgmDS9_O3VTjmVzR3LDO71DQwvf/exec";
 
-const S={segment:null,startTime:0,trade_offs:{},trust_ladder:[],origin_story:{},discovery_frequency:'',last_discovery_channel:'',algorithm_feeling:'',platform_intent:'',same_brands:'',frustration:'',email:'',respondent_name:'',cac_monthly:'',marketplace_fee_pct:'',commission_12pct:'',trust_requirement:'',growth_challenge:'',marketplace_value:''};
+const S={segment:null,startTime:0,trade_offs:{},origin_story:{},discovery_frequency:'',last_discovery_channel:'',algorithm_feeling:'',platform_intent:'',same_brands:'',frustration:'',email:'',respondent_name:'',cac_monthly:'',marketplace_fee_pct:'',commission_12pct:'',trust_requirement:'',growth_challenge:'',marketplace_value:''};
 
 /* Pair emojis: [left icon, right icon, left illus, right illus] */
 const PAIR_META=[
