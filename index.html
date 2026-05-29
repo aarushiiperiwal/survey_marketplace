@@ -129,6 +129,8 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:380px;heig
 }
 .o1-option.selected .o1-icon{background:#FFE5C0;}
 .o1-text{flex:1;font-size:14px;font-weight:500;color:var(--text);line-height:1.45;}
+.o1-option.selected .s-opt-dot{background:var(--orange);border-color:var(--orange);}
+.o1-option .s-opt-dot{margin-left:auto;}
 
 .o1-vs{text-align:center;font-size:11px;color:#B4A090;letter-spacing:.05em;margin-bottom:0;margin-top:-4px;}
 
@@ -539,6 +541,7 @@ function pairCard(text,icon,illus,id,onclick,pairKey,val,extraClass=''){
   return`<div class="o1-option ${extraClass}" id="${id}" data-pair-key="${pairKey}" data-val="${val}" onclick="${onclick}">
     <div class="o1-icon">${icon}</div>
     <div class="o1-text">${text}</div>
+    <div class="s-opt-dot"></div>
   </div>`;
 }
 
