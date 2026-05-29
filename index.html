@@ -475,7 +475,40 @@ function renderCurrentScreen() {
   }
 }
 
-function render(html){document.getElementById('sScreen').innerHTML=html;}
+function render(html){
+  const scr = document.getElementById('sScreen');
+  scr.innerHTML = html;
+  
+  // Sync selection state of generic buttons
+  scr.querySelectorAll('.s-opt').forEach(btn => {
+    const key = btn.getAttribute('data-key');
+    const val = btn.getAttribute('data-val');
+    if (key && val) {
+      const isSelected = S[key] === val;
+      if (isSelected) {
+        btn.classList.add('selected');
+        btn.querySelector('.s-opt-dot')?.classList.add('selected');
+      } else {
+        btn.classList.remove('selected');
+        btn.querySelector('.s-opt-dot')?.classList.remove('selected');
+      }
+    }
+  });
+
+  // Sync selection state of pair option cards
+  scr.querySelectorAll('.o1-option').forEach(card => {
+    const pairKey = card.getAttribute('data-pair-key');
+    const val = card.getAttribute('data-val');
+    if (pairKey && val) {
+      const isSelected = S.trade_offs[pairKey] === val;
+      if (isSelected) {
+        card.classList.add('selected');
+      } else {
+        card.classList.remove('selected');
+      }
+    }
+  });
+}
 function safe(s){return(s||'').replace(/'/g,"\\'");}
 
 /* ── Progress dots ── */
@@ -501,8 +534,8 @@ function hdr(dotsHtml,counterText,heading,sparkle){
 }
 
 /* ── Option 1 pair card ── */
-function pairCard(text,icon,illus,id,onclick,extraClass=''){
-  return`<div class="o1-option ${extraClass}" id="${id}" onclick="${onclick}">
+function pairCard(text,icon,illus,id,onclick,pairKey,val,extraClass=''){
+  return`<div class="o1-option ${extraClass}" id="${id}" data-pair-key="${pairKey}" data-val="${val}" onclick="${onclick}">
     <div class="o1-icon">${icon}</div>
     <div class="o1-text">${text}</div>
   </div>`;
@@ -511,7 +544,7 @@ function pairCard(text,icon,illus,id,onclick,extraClass=''){
 /* ── Generic option with dot ── */
 function optBtn(text, icon, key, val, idx) {
   const isSelected = S[key] === val;
-  return `<button id="opt-${key}-${idx}" class="s-opt ${isSelected ? 'selected' : ''}" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
+  return `<button id="opt-${key}-${idx}" class="s-opt ${isSelected ? 'selected' : ''}" data-key="${key}" data-val="${val}" onclick="pickOpt('${safe(key)}','${safe(val)}',this)">
     <div class="s-opt-dot ${isSelected ? 'selected' : ''}"></div>
     <span style="font-size:18px;flex-shrink:0">${icon}</span>
     <span>${text}</span>
@@ -539,8 +572,8 @@ function showBuyerPair(){
   render(`
     ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
     <div class="s-body" id="body-buyer-pair-${pairIdx}">
-      ${pairCard(a,ia,ea,'pa-' + pairIdx,'pickPair(0)',classA)}
-      ${pairCard(b,ib,eb,'pb-' + pairIdx,'pickPair(1)',classB)}
+      ${pairCard(a,ia,ea,'pa-' + pairIdx,'pickPair(0)',`pair_${pairIdx+1}`,PAIRS[pairIdx][2],classA)}
+      ${pairCard(b,ib,eb,'pb-' + pairIdx,'pickPair(1)',`pair_${pairIdx+1}`,PAIRS[pairIdx][3],classB)}
     </div>
   `);
 }
@@ -668,8 +701,8 @@ function showBrandPair(){
   render(`
     ${hdr(dots(8,pairIdx),`${pairIdx+1} OF 8`,'Which resonates<br>more with you?<br><span style="font-size:13px;font-weight:400;color:var(--orange);">— choose one —</span>',true)}
     <div class="s-body" id="body-brand-pair-${pairIdx}">
-      ${pairCard(a,ia,ea,'pa-' + pairIdx,'pickBrandPair(0)',classA)}
-      ${pairCard(b,ib,eb,'pb-' + pairIdx,'pickBrandPair(1)',classB)}
+      ${pairCard(a,ia,ea,'pa-' + pairIdx,'pickBrandPair(0)',`pair_${pairIdx+1}`,PAIRS[pairIdx][2],classA)}
+      ${pairCard(b,ib,eb,'pb-' + pairIdx,'pickBrandPair(1)',`pair_${pairIdx+1}`,PAIRS[pairIdx][3],classB)}
     </div>
   `);
 }
