@@ -497,6 +497,7 @@ function render(html){
 
   // Sync selection state of pair option cards
   scr.querySelectorAll('.o1-option').forEach(card => {
+    card.style.pointerEvents = ''; // Reset pointer events to make clickable
     const pairKey = card.getAttribute('data-pair-key');
     const val = card.getAttribute('data-val');
     if (pairKey && val) {
